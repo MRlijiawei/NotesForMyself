@@ -1,0 +1,6 @@
+1.服务启动： ng serve （-o，--open）
+2.创建service ：ng generate service XXX （--module=app）
+3.（路由）创建：ng generate module app-routing --flat --module=app
+4.创建组件：ng generate component XXX
+
+ng new my-app

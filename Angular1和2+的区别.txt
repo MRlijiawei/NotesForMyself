@@ -1,0 +1,6 @@
+1.Angular2不是1的升级版，而是重写；
+2.2是基于TypeScript的；
+3.1的核心概念是$scope，2没有，2使用zone.js来记录监测变化；
+4.1的controller在2中不再使用，相对于来说2使用Component组件来替代，2的组件化思想更加明显；
+5.Angular 2中, 指令的结构、用法作了一些调整，比如1中的ng-repeat被*ngFor替代；
+6.双向数据绑定: [(ngModel)]的写法替换了ng-model

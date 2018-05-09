@@ -1,0 +1,4 @@
+1.安装 elm：npm i element-ui -S
+2.安装 elm-angular：npm i --save element-angular
+
+需要在原angular-cli项目文件夹下执行安装。
