@@ -3,7 +3,8 @@ cnpm install webpack -g
 2.npm install webpack --save-dev
 npm install jquery --save-dev
 npm install style-loader css-loader --save-dev
-npm install extract-text-webpack-plugin@next ¨C-save-dev
+npm install extract-text-webpack-plugin@next --save-dev
 
+webpack
 
 webpack runoob1.js bundle.js
