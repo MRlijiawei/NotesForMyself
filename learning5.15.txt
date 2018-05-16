@@ -1,0 +1,5 @@
+1.	e.preventDefault--鼠标事件，告知浏览器不执行无关操作。
+2.	every函数--数组中所有元素都符合
+	filter--返回符合
+	forEach--
+3.	angular toPromise()--转换成promise对象，就可以正常使用then方法了。

@@ -1,0 +1,8 @@
+Repository type: FSFS
+
+Repository name: myRepository
+
+Repository URL: https://WIN-01712091448/svn/myRepository
+
+Configured repository permissions:
+- Everyone (Read / Write)

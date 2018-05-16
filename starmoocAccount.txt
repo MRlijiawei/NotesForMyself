@@ -6,3 +6,8 @@
 5.计算机学院督导：jsjxydd
 
 没有写密码的就是跟用户名同名的
+
+6.调试用户（代理到http://192.168.0.103:8080/starMOOC/starmoocHomepage）
+2017979779
+
+yarn run webpack:dev

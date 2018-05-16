@@ -1,0 +1,4 @@
+boot2docker用户和密码
+用户	密码	进入方式
+docker	tcuser	ssh
+root		command：sudo -i (docker用户下执行)
