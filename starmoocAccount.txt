@@ -11,3 +11,7 @@
 2017979779
 
 yarn run webpack:dev
+
+7.测试环境（目标地址同1）VPN
+119.97.166.190
+xuly	jdgs2017

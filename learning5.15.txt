@@ -3,3 +3,18 @@
 	filter--返回符合
 	forEach--
 3.	angular toPromise()--转换成promise对象，就可以正常使用then方法了。
+
+5.16
+1.路由
+	canActivate[AuthGuard]，子路由，默认路由，redirectTo，pathMatch。懒加载'#'，手动跳	转navigate。
+2.	nz-antd组件
+3.	ng-template
+4.	data-action
+
+5.17
+1.	contextmenu右键菜单事件
+
+5.18
+1.	查看angular版本：在package.json中
+2.	标签中#nzTable含义？？
+3.	list:hover .tool用法--list划过时，tool的样式改变
