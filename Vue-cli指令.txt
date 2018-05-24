@@ -1,0 +1,9 @@
+1.全局安装vue-cli
+npm install vue-cli -g
+vue -V查看版本号
+
+2.生成项目
+vue init webpack vuetext1(项目名)
+
+3.运行
+npm run dev

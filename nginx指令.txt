@@ -1,0 +1,52 @@
+1.显示帮助
+/usr/local/nginx/sbin/nginx -h
+或者 /usr/local/nginx/sbin/nginx -?
+
+2.查看进程
+ps -ef | grep nginx
+
+3.版本与配置测试
+显示版本信息：/usr/local/nginx/sbin/nginx -v
+显示版本信息与编译阶段的参数：/usr/local/nginx/sbin/nginx -V
+测试配置文件是否有误：/usr/local/nginx/sbin/nginx -t
+在测试配置阶段不输出错误级别以下的信息：/usr/local/nginx/sbin/nginx -t -q
+
+4.几种启动方式
+默认启动：/usr/local/nginx/sbin/nginx
+指定配置文件启动：/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+另行指定安装目录启动：/usr/local/nginx/sbin/nginx -p /usr/local/nginx/
+另行指定全局配置项的启动方式：/usr/local/nginx/sbin/nginx -g “pid /var/nginx/test.pid;”
+注意：
+    1. -g 后面的参数不能与默认路径下的 nginx.conf 中的配置项相冲突；
+    2. 执行其他命令行时，需要把 -g 参数 也带上，否则可能出现配置项不匹配的情形
+
+5.停止服务
+快速停止服务（直接向master进程发送TERM或者INT信号）：
+/usr/local/nginx/sbin/nginx -s stop
+
+或者 kill -s SIGTERM <nginx master pid>
+或者 kill -s SIGINT <nginx master pid>
+
+优雅地停止服务：
+/usr/local/nginx/sbin/nginx -s quit
+
+或者 kill -s SIGQUIT <nginx master pid>
+
+优雅地停止某个worker进程：
+kill -s SIGWINCH <nginx worker pid>
+
+6.重新加载配置项并生效
+/usr/local/nginx/sbin/nginx -s reload
+
+或者 kill -s SIGHUP <nginx master pid>
+
+说明：Nginx会先检查配置项是否错误，如果全部正确，就优雅关闭再重启；
+
+7.日志文件回滚
+可以先将日志文件改名或转移到其他目录中（备份），使用如下命令重新打开日志时就会生成新的日志文件（使得
+日志文件不至于过大）：
+/usr/local/nginx/sbin/nginx -s reopen
+
+或者 kill -s SIGUSR1 <nginx master pid>
+
+8.升级

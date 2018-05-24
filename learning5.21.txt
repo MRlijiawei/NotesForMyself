@@ -1,0 +1,76 @@
+5.21
+1.this.subject.destroy('onCancel')
+subject是nz-antd组件。该方法销毁该组件，关闭弹窗。
+2.与1对应的，生成组件，打开弹窗：
+const subscription = this.modalService.open({
+            style: {
+                top: '20px',
+                padding: '30px',
+            },
+            title: '',
+            content: ShowClassesComponent,
+            onOk() {
+                return;
+            },
+            onCancel() {
+                return;
+            },
+            width: 800,
+            footer: false,
+            // 如果content传入的是Component的时候，通过componentParams来传入Component的参数
+            componentParams: {
+                _checkedValue: this._checkedValue,
+            }
+        });
+        subscription.subscribe((result) => {
+        });
+
+5.22
+1.上下左右居中
+2.ngClass和ngStyle用法：
+[ngClass]="{'unchosen_border':!class.checked, 'chosen_border':class.checked}"
+
+3.css画对勾
+首先给他一个外部的div画圆，并且相对父级div在其角落
+html
+<div class="rt_circle" *ngIf="class.checked">
+                    <a class="checks"></a>
+                </div>
+css
+.rt_circle  {
+        position: relative;
+        display: inline-block;
+        left: 42px;
+        bottom: 10px;
+        width: 18px;
+        background-color: green;
+        height: 18px;
+        border-radius: 50%;
+    }
+然后在其内部画对勾，使用两个"/"加上旋转来实现
+.checks {
+        display: inline-block;
+        position: relative;
+        left: -4px;
+        top: -6px;
+        width: 6px;
+        height: 2px;
+        background: white;
+        line-height: 0;
+        font-size: 0;
+        vertical-align: middle;
+        -webkit-transform: rotate(45deg);
+    }
+
+    .checks:after {
+        content: '/';
+        display: block;
+        width: 11px;
+        height: 2px;
+        background: white;
+        -webkit-transform: rotate(-90deg) translateY(15%) translateX(50%);
+    }
+
+5.23
+1.使元素不占位的方法之一：父元素设置position:relative，自身设置position:absolute
+2.*ngIf和*ngFor不可以在同一元素一起使用？

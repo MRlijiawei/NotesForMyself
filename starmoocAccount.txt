@@ -1,5 +1,5 @@
 1.地址：http://starmooc.nercel.cn/starmooc/starmoocHomepage
-2.教师：2017878878/2017878878a
+2.教师：2017878878/2017878878
 3.学生：在课堂--成员里面查找
 	15171296968
 4.校级督导：xjdd
@@ -15,3 +15,5 @@ yarn run webpack:dev
 7.测试环境（目标地址同1）VPN
 119.97.166.190
 xuly	jdgs2017
+
+8.token获取：starmooc库中oauth_token表，username搜索，access_token使用
