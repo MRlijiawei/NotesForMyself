@@ -17,3 +17,7 @@ yarn run webpack:dev
 xuly	jdgs2017
 
 8.token获取：starmooc库中oauth_token表，username搜索，access_token使用
+
+9.连接测试环境，在登录后找到
+http://exam.starmooc.nercel.cn/linkfromstarmooctoexam/f4f22849-9bbc-4004-9b43-9bbd6c12cb26
+使用其中的token来本地localhost登录

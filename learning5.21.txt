@@ -74,3 +74,6 @@ css
 5.23
 1.使元素不占位的方法之一：父元素设置position:relative，自身设置position:absolute
 2.*ngIf和*ngFor不可以在同一元素一起使用？
+
+5.25
+position:fixed--元素不随页面滚动，和href="#XX"锚点一起使用

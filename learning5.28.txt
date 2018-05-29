@@ -1,0 +1,40 @@
+5.28
+1. angular编译器识别不了对象数组再嵌套一层对象数组且没有详细定义该数据结构的情况---
+使用allReTestClasses = [{members:[]}]强制定义结构，并且使用一个tempArray来做中间转换。
+
+
+5.29
+1.sleep方法实现
+sleep(d) {
+        for(var t = Date.now();Date.now() - t <= d;);
+    }
+
+2.angular路由，点击浏览器刷新时，刷新完成后会重新生成一次刷新前的组件页面。。解决方法，通过window.location.href来区分。
+
+3.对象数组根据对象的某个属性进行排序
+
+arr.sort(compare("age"))
+
+var compare = function (prop) {
+    return function (obj1, obj2) {
+        var val1 = obj1[prop];
+        var val2 = obj2[prop];
+        if (!isNaN(Number(val1)) && !isNaN(Number(val2))) {
+            val1 = Number(val1);
+            val2 = Number(val2);
+        }
+        if (val1 < val2) {
+            return -1;
+        } else if (val1 > val2) {
+            return 1;
+        } else {
+            return 0;
+        }            
+    } 
+}
+
+sort方法，默认ancii码升序，
+
+a.sort(function(x,y){ return x<y})
+=》
+[9, 7, 6, 5, 4, 3, 2, 1]
