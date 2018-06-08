@@ -1,0 +1,11 @@
+1.css  transition，渐变属性，其值可以是某属性，也可以是all，如transition： all 0.3s；鼠标放到上边时触发，0.3 = .3
+
+2.background-color: rgba(57, 57, 55, 0.6);颜色和透明度可以一起使用
+
+6.6
+3.	layui
+
+4.UEditor--百度的富文本编辑器
+
+5.bootstarp
+bootstrap modal的data-dismiss属性，点击关闭该弹窗
