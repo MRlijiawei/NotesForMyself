@@ -1,0 +1,10 @@
+使文字两端对齐：
+1.text-align:justify;但是该属性只对非最后一行起作用，如果是只有一行，就不能达到目标；
+2.给元素加after，使其变成非最后一行
+div::after{
+    content:'';
+    display:inline-block;
+    width:100%;
+    visibility:hidden;
+  }
+3.text-align-last:justify;

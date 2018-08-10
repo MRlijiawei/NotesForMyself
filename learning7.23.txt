@@ -1,0 +1,27 @@
+1.浏览器缓存，
+解决：接口，ajax请求设置不缓存；
+  设置meta不适应缓存；
+url拼接时间戳使每次访问的url都不一样，就不会使用缓存了。
+
+2.跨域问题：
+1.给ajax的dataType设置为JSONP，但是不使用于接口查询；
+2.设置浏览器，给快捷键后边拼接允许跨域，但是当前不支持了；
+3.设置tomcat允许跨域，修改tomcat配置文件filter；
+4.服务端设置请求header允许跨域
+
+3.bootstrap table，layui select与form
+
+bootstarp table初始化，由于其初始化的方法有几种，所有会出现不该初始化时初始化，比如，一些嵌在弹窗中的表。其初始化的原理，首先html里可以data-ajax="getActProgress"来给表格定义请求参数；其次js里$("#searchActivity").bootstrapTable('destroy').bootstrapTable({。。。也可以对表进行初始化。因而，避免不必要的请求的方法，就是在页面初始化时js不执行表格初始化事件，而是放在对应的弹窗初始化事件中；当然，特殊情况也有特殊解决办法，比如我有个参数，是在点击之后才有，我就可以通过这个参数有无来return
+
+4.渐入渐出实现方式：
+1.css
+	-webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+2.jquery  1
+	$("#msg").show("fast");
+             $("#msg").hide("slow");
+3.jquery  2
+	$("#msg").fadeIn();
+             $("#msg").fadeOut();

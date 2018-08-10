@@ -1,0 +1,74 @@
+1.EL表达式：JSP语言，类似angular的数据绑定的形式，它会从page，request，session，application中取值。比如:${name}它的意思就从以上4个对象中去名为name的值。如果是在转发到这个页面之前，在request中setAttribute（“name”，“测试”），那么${name} 就会被 测试 这个信息给替换。
+此次遇到的是在java代码中存的。
+
+2.nz组件 nz-form-explain
+属性nzHasFeedback，校验
+[ Validators.pattern(/^(?!(\s+$))/ ), Validators.required ]
+
+3.日期格式兼容性
+toLocalDateString()方法，ie和谷歌火狐的返回结果不同，ie是年月日，谷歌火狐是斜杠/
+
+4.nzcheckbox的兼容性，ie上disabled会强制覆盖掉选中样式。
+
+5.关于数组赋值后，后者值修改了前者也跟着变了，原因是因为两个变量使用的是同一内存地址池，要解决可以使用生成新内存的方法，比如concat一个空数组
+
+
+7.18
+取树的深度和广度（叶子节点数）：
+function getDepth(json) {
+            var arr = [];
+            arr.push(json);
+            var depth = 0;
+            while (arr.length > 0) {
+                var temp = [];
+                for(var i = 0 ; i < arr.length ; i++){
+                    temp.push(arr[i]);
+                }
+                arr = [];
+                for(var i = 0 ; i < temp.length ; i++){
+                    for(var j = 0 ; j < temp[i].children.length ; j++){
+                        arr.push(temp[i].children[j]);
+                    }
+                }
+                if(arr.length >= 0){
+                    depth++;
+                }
+            }
+            return depth;
+        }
+
+
+function getLeafCountTree(json) {
+            if(json.children.length == 0){
+                json.colspan = 1;
+                return 1;
+            }else{
+                var leafCount = 0;
+                for(var i = 0 ; i < json.children.length ; i++){
+                    leafCount = leafCount + getLeafCountTree(json.children[i]);
+                }
+                json.colspan = leafCount;
+                return leafCount;
+            }
+        }
+
+7.19 
+1.JSON.stringfy，对象中如果有无限嵌套结构，会栈溢出报错
+
+2.c:if,c:set等jsp标签
+JSTL标准标签库http://www.runoob.com/jsp/jsp-jstl.html
+
+7.20
+1.layui组件form表单
+select
+<div class="layui-input-block  layui-form" lay-filter="selFilter">
+     <select id="sel" lay-verify="required" >
+            <option value="">请选择</option>
+             <option value="A">选项A</option>
+             <option value="B">选项B</option>
+     </select>
+   </div>
+
+	2、设置默认值：$(“#sel”).val(“B”); 
+	3、渲染：form.render(‘select’,’selFilter’); 
+注：局部刷新需要使用lay-filter，并且设置class=”layui-form”

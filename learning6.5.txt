@@ -9,3 +9,5 @@
 
 5.bootstarp
 bootstrap modal的data-dismiss属性，点击关闭该弹窗
+
+foreach无自带跳出循环功能，只可以捕捉异常

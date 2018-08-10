@@ -1,0 +1,9 @@
+获取父子级$().parent()
+获取同级前后
+$().prev() .next()
+
+/*水平翻转*/
+.flipx { transform: rotateY(180deg); }
+
+/*垂直翻转*/
+.flipy { transform: rotateX(180deg); }
