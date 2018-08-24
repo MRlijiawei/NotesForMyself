@@ -1,0 +1,109 @@
+typescript
+
+1.联合类型
+let myFavoriteNumber: string | number;
+
+2.接口--对象类型
+interface Person {
+name: string;
+age: number;
+}
+let tom: Person = {
+name: 'Tom',
+age: 25
+};
+2.1可选属性
+interface Person {
+name: string;
+age?: number;
+}
+let tom: Person = {
+name: 'Tom'
+}
+2.2任意属性
+interface Person {
+name: string;
+age?: number;
+[propName: string]: any;
+}
+let tom: Person = {
+name: 'Tom',
+gender: 'male'
+};
+当以上两种属性一起使用的时候，age会被当成是任意属性propName，此时其值的类型也必须遵照任意属性的值的类型
+interface Person {
+name: string;
+age?: number;
+[propName: string]: string;
+}
+let tom: Person = {
+name: 'Tom',
+age: 25,
+gender: 'male'
+};--错
+let tom: Person = {
+name: 'Tom',
+age: '25',
+gender: 'male'
+};
+2.3只读属性
+interface Person {
+readonly id: number;
+name: string;
+age?: number;
+[propName: string]: any;
+}
+
+3。数组的类型
+let fibonacci: number[] = [1, 1, 2, 3, 5];
+3.1数组的泛型
+let fibonacci: Array<number> = [1, 1, 2, 3, 5]
+3.2数组的接口表示
+interface NumberArray {
+[index: number]: number;
+}
+let fibonacci: NumberArray = [1, 1, 2, 3, 5];
+3.3any数组
+let list: any[] = [......]
+
+4.函数
+函数声明和函数表达式（function xxx(){}和let XXX = function（）{}）
+
+4.1用接口对象声明函数
+interface SearchFunc {
+(source: string, subString: string): boolean;
+}
+let mySearch: SearchFunc;
+mySearch = function(source: string, subString: string) {
+return source.search(subString) !== -1;
+}
+
+4.2可选参数，类似2.1
+可选参数必须接在必需参数后面。换句话说，可选参数后面不允许
+再出现必须参数了
+function buildName(firstName?: string, lastName: string) {......}
+
+4.3参数默认值
+function buildName(firstName: string = 'Tom', lastName: string)
+
+4.4剩余参数（...rest，且只能是最后一个参数）
+function push(array, ...items) {
+items.forEach(function(item) {
+array.push(item);
+});
+}
+let a = [];
+push(a, 1, 2, 3);
+
+4.5重载
+function reverse(x: number): number;
+function reverse(x: string): string;
+function reverse(x: number | string): number | string {
+if (typeof x === 'number') {
+return Number(x.toString().split('').reverse().join(''))
+;
+} else if (typeof x === 'string') {
+return x.split('').reverse().join('');
+}
+}
+可以对number型输出number型的倒序，对string型输出string型的倒序
