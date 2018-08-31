@@ -1,0 +1,75 @@
+1.几种阻止冒泡事件的方法
+（1）return false;（return;只是返回，不阻止冒泡）
+（2）oEvent.stopPropagation();
+例：
+oDiv1.onclick = function (ev){
+                var oEvent = ev || event;
+                alert("this is div1");
+                
+                //js阻止事件冒泡
+                //oEvent.cancelBubble = true;
+                //oEvent.stopPropagation();
+}
+
+
+oEvent.preventDefault();只是阻止链接的默认行为，没有停止冒泡
+
+应用：layui的弹窗中cancel事件中，假如我们要在关闭之前做一些校验，则可以阻止冒泡停止关闭
+
+2.js字符串全局替换
+str.replace(/a/g, 'o');
+单个替换：str.replace('a', 'o');仅替换第一个
+
+3.解决canvas图片异步加载问题：单个，可使用onload或requestAnimationFrame；批量，需要使用loop递归，使用循环是不行的。
+(function loop(n) {
+n++
+})(0)
+
+4.给方法增加回调
+//方法内部
+var deferred=$.Deferred();
+{//其他方法内部
+....
+....
+deferred.resolve(canvas.toDataURL().substring(22));
+}
+return deferred.promise();
+
+然后就可以在调用该方法的地方进行接收了。
+
+
+5.绝对布局加left超出屏幕实现不可见操作页面，类似visablity:hidden
+
+
+6.canvas转base64与文件操作：
+
+ 1 //canvas转图片
+ 2 
+ 3 canvas.toDataURL().substring(22)
+ 4 
+ 5 //js新建文件和文件填充
+ 6 
+ 7 var zip = new JSZip();
+ 8 //zip.file("readme.txt", "证书\n");
+ 9 var img = zip.folder("images");
+10 
+11 img.file('录取通知书_' + toSendList[n].studentName + '.png', canvas.toDataURL().substring(22), {base64: true});
+12 
+13 //js文件打包下载
+14 
+15 zip.generateAsync({type:"blob"}).then(function(content) {
+16 saveAs(content, "证书.zip");
+17 });
+用到的插件：FileSaver.js, jszip.min.js
+
+
+js异步与多线程
+https://www.cnblogs.com/nullcc/p/5841182.html
+https://www.cnblogs.com/haodawang/articles/5850822.html
+
+em与px
+https://www.cnblogs.com/wuguoyuan/p/rem.html
+
+6.数据较少时，进度条无法刷新到100%的问题：疑似组件还未渲染完成。解决方法：定时器
+
+7.jquery的is()方法。$(event).is(".classA")
