@@ -1,0 +1,45 @@
+1.微信（安卓）清缓存刷新。（苹果直接刷新即可）
+https://debugx5.qq.com/
+
+2. lay-separator="|"
+
+3.全部替换str.replace(/需要替换的字符串/g，"新字符串")
+word-break和break-all
+
+4.接口返回ie和谷歌返回不同--ie浏览器ajax缓存问题，解决方法，拼接一个随机数，或者关闭ajax缓存
+
+5.百度富文本有序无序原因：样式未加载，需手动添加，插件的bug
+
+6..all-rethink li img[title]:not(.anchorclass)
+
+7.layui的radio和select，
+radio: form.on('radio(filter)', function (data) {})
+select: 用id获取值
+
+8.bootstarp-tabled 的resetsearch仅第一次生效，带参数refresh才可以，要带上url，才会把页码重置
+
+9.$(this).prop("checked", true).click();
+$(this).clone()
+
+10.
+
+//计算每周单子数量，去重.a是单子字符串
+var a = "XXXX"
+var c = a.replace(/\D/g, ",").split(/[^\d]+/);
+//将所有非数字的字符替换为逗号然后使用非数字的字符进行分割。这里为了学习所有都写上了。replace和split的参数，都可以带多个，多个的时候使用/,|，|./进行分割，也可以使用正则
+var b = [];
+for(var i=0;i<c.length;i++)
+{
+	if(b.indexOf(c[i])<0){
+		b.push(c[i]);
+	}
+}
+console.log("单子总数（包括重复）："+c.length);
+console.log("单子总数（不计重复）："+b.length);
+//按字符从小到大排序
+var d = b.sort().toString();
+//按数字从大到小排序
+var e = b.sort(function (x,y) {
+            return y-x;
+        }).toString();
+console.log("（从新到旧）排序后的单号："+e);
