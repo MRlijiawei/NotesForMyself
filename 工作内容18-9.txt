@@ -1,0 +1,109 @@
+
+ lay-separator="|"
+全部替换str.replace(/需要替换的字符串/g，"新字符串")
+word-break和break-all
+
+
+1083转义问题，需统一处理，资源限制特殊字符（资源的回车搜索与点击搜索的事件不同，需要改）
+776接口返回ie和谷歌返回不同--ie浏览器ajax缓存问题，解决方法，拼接一个随机数，或者关闭ajax缓存
+
+
+laytable的自定义列，设置百分比后出现滚动，对不齐问题，渐变，请求本地json跨域
+
+
+百度富文本有序无序原因：样式未加载，需手动添加，插件的bug。锚点等其他问题类似。锚点是因为被过滤掉了
+
+1524。1523，774，1735,1716,1747
+通知编辑和添加的富文本不同？
+
+css选择器
+.all-rethink li img[title]:not(.anchorclass)
+
+layui的radio和select，
+radio: form.on('radio(filter)', function (data) {})
+select: 用id获取值
+
+
+resetsearch仅第一次生效。
+带参数refresh
+查看bootstraptable源码，发现要带上url刷新的时候，才会重置pageNum为1
+
+
+当前成绩页面，如果作业的名称有特殊符号如<script>alert("1")</script>会显示有问题
+
+$(this).prop("checked", true).click();
+$(this).clone()
+
+
+//计算每周单子数量，去重.a是单子字符串
+var a = "XXXX"
+var c = a.replace(/\D/g, ",").split(/[^\d]+/)
+var b = [];
+for(var i=0;i<c.length;i++)
+{
+	if(b.indexOf(c[i])<0){
+		b.push(c[i]);
+	}
+}
+console.log("单子总数（包括重复）："+c.length);
+console.log("单子总数（不计重复）："+b.length);
+//按字符从小到大排序
+var d = b.sort().toString();
+//按数字从大到小排序
+var e = b.sort(function (x,y) {
+            return y-x;
+        }).toString();
+console.log("（从新到旧）排序后的单号："+e);
+
+
+$dialog
+rem和em	http://caibaojian.com/rem-vs-em.html
+
+9.19
+@media
+@media mediatype and|not|only (media feature) {
+    CSS-Code;
+}
+<link rel="stylesheet" media="mediatype and|not|only (media feature)" href="mystylesheet.css">
+
+text-indent
+
+
+9.25
+el-breadcrumb
+
+9.26
+vue watch
+
+vue自定义组件标签，若组件名小写，则会被解析，若大写，才可以用
+
+9.27
+ v-for="item in props.ocCourseMemberDetails" :key="item.id"
+
+<el-table-column label="性别">
+        <template slot-scope="props">
+            <table>
+                <tr v-for="item in props.row.ocCourseMemberDetails" :key="item.id">{{item.sex}}</tr>
+            </table>
+        </template>
+      </el-table-column>
+
+el-dialog双层弹窗嵌套时
+ :modal-append-to-body="false" :append-to-body='true'
+解决打开弹窗后遮罩层异常问题
+
+vue强制刷新：
+xxx v-if="hackReset" xxx
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+
+
+this.$options.filters['transformSex'](row.sex)
+
+
+火狐href=”javascript:void(0);”会新开标签卡
+原因在于三款浏览器，对三个属性的处理顺序不同。
+Chrome顺序：onclick -> href -> target
+IE和Firefox顺序：onclick -> target -> href
