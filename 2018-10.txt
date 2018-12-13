@@ -1,0 +1,53 @@
+1.单元格合并，colspan，rowspan
+
+2.cookie是服务端的，本地打开的页面没有
+
+3.iframe中的元素，展开后才能获取到。想直接获取，需要
+$("#iframe的ID").contents().find("#iframe中的控件ID").click()
+或
+格式：$("#iframe中的控件ID",document.frames("frame的name").document).click()
+
+4.canvas坐标相关
+canvas.getBoundingClientRect()	
+
+var bbox = canvas.getBoundingClientRect();
+            var x =  e.clientX - bbox.left * (canvas.width/bbox.width);
+            var y = e.clientY - bbox.top * (canvas.height/bbox.height);
+
+5.
+canvas画布清空方法：
+1.利用canvas高度宽度重置会清空的原理，重置高度或宽度；canvas.height = canvas.height；
+2.清空填充；cxt.clearRect(0,0,c.width,c.height);??
+3.使用某颜色覆盖，不推荐。
+
+6.html字符串拼接时，使用templateJS可以拼接数组，使用普通js，数组会转化为逗号分隔的字符串。
+需要join转字符串，然后再split取
+
+7.html属性名只能小写
+
+8.canvas拼接
+思路1：每个canvas单独生成图片后拼接
+思路2：绘制一个大的canvas，把各个canvas通过putImageData拼接进去，再生成图片
+
+var base64 = canvas.toDataURL("image/"+ext, , quality); //quality压缩比
+
+问题： Bootstrap 模态框在用户点击背景空白处时，会自动关闭。
+
+解决方法：
+
+在HTML页面中编写模态框时，在div初始化时添加属性 aria-hidden=”true” data-backdrop=”static”，即可。
+
+在需要显示模态框，初始化时，$(‘#myModal’).modal({backdrop: ‘static’, keyboard: false});
+ 
+其中 ，backdrop：’static’指的是点击背景空白处不被关闭； 
+keyboard:false指的是触发键盘esc事件时不关闭。
+
+
+9.css实现图标
+
+10.ie的new Date(data.data.startTime).toLocaleDateString()是年月日格式的，不是年/月/日格式
+
+11.laydate.now(+1)
+
+12.new Date("2018-12-29 00:00:00").getTime()
+//1546012860000

@@ -1,0 +1,148 @@
+1.el-radio-group 绑click
+ @click.native.prevent=
+
+2.
+//在指定位置添加元素,第一个参数指定位置,第二个参数指定要删除的元素,如果为0,则追加
+array.splice(2, 0, "three")
+
+3.(1/69).toFixed(2)及其再乘以100，乘以100后会变
+
+4.数组替换
+arr.splice(1,1,'ttt')
+//替换起始下标为1，长度为1的一个值为‘ttt’，len设置的1
+或直接给某一项赋值
+
+5.使用8位的半透明颜色码，打包后会有些变成黑色，改成rgb试试
+
+6.对象数组排序
+export function compare (property) {
+  return function (obj1, obj2) {
+    return obj1[property] - obj2[property]
+    // 降序相反
+  }
+}
+使用：
+data.data.userAllDepartmentStatisticsVOList.sort(orderObjArr('total'))
+
+7.IE兼容性
+IE不兼容promise，所以直接使用axios也会报错，因为axios本质上是封装了ES6语法的promise,
+
+解决办法：引入babel-pollfile就行了。babel-Polyfill相当于一个ES6的兼容垫片, 它会仿效一个完整的ES2015+环境，从而让某些浏览器也能读懂
+
+npm install --save babel-polyfill
+然后在main.js的顶部引入import "babel-polyfill"; 最好给它最优先加载
+随后在build目录下webpack.config.js（如果你是vue-cli项目的话那就是build目录下webpack.base.conf.js）设置app载入babel-polyfill
+module.exports = {
+
+    entry: {
+
+            app: ["babel-polyfill",'./src/main.js']
+
+    }
+
+} 
+
+8.echarts滚动
+dataZoom: [
+                // 鼠标滚动用
+                {
+                  type: 'inside',
+                  start: 0,
+                  end: 10
+                },
+
+9.
+.container_box:hover {
+  box-shadow: black 0px 0px 5px;
+}
+和
+.container_box :hover {
+  box-shadow: black 0px 0px 5px;
+}
+后者会给该类样式内部所有元素都加上该样式
+
+10.echarts不因此
+,
+                  axisLabel: {
+                    alignWithLabel: true,
+                    'interval': 0
+                  }
+
+11.npm run build 打包后的map文件去掉
+去src/config/index.js中改一个参数：
+productionSourceMap:false
+map文件的作用：项目打包后，代码都是经过压缩加密的，如果运行时报错，输出的错误信息无法准确得知是哪里的代码报错。
+有了map就可以像未加密的代码一样，准确的输出是哪一行哪一列有错
+
+12.打不同环境包配置
+http://www.cnblogs.com/woshidouzia/p/9345706.html
+
+
+13.火狐下获取不到event
+
+在火狐上面，获取不到event事件，通常会报event is not defined的错误
+这是我们就需要手动去获取event事件，方法如下
+
+①获取event的方法
+
+<script>
+function getEvent(event){
+events=arguments.callee.caller.arguments[0] || window.event;//获取event属性
+}
+
+②设置一个隐藏域添加点击事件，响应函数就是getEvent()
+<input type="hidden" id="getEvent" onclick="getEvent()">
+?
+③手动触发隐藏域的事件
+在页面一加载就会出发，直接在script标签内部写
+
+$("#getEvent").click();
+</script>
+
+这样就能正常在火狐下使用event了
+
+貌似无效
+
+14.在线预览，viewer.js的5700行左右
+pdf.js11000行左右
+
+15.获取iframe下的window对象
+document.getElementById("PAID").contentWindow//.PDFViewerApplication.pdfDocument
+ top.frames["PA"]
+// <iframe id="PAID" name="PA" src="ItemSetting.htm"></iframe>
+pdf.getPage(1)
+
+16.平方和平方根
+Math.pow(10,2)
+Math.sqrt
+Math.atan
+角度弧度转化
+//弧度 = π/180×角度
+    //角度 = 180/π×弧度
+    var hd = Math.PI / 180 * 30 ;
+    var jd = 180/Math.PI * hd;
+//角度 = 180/Math.PI * Math.asin(1/2)
+    console.log(Math.sin(Math.PI/180*30));
+
+17.用Object.defineProperty这个方法来实现数据的双向绑定是Vue的核心思想
+
+18.bootstrapTable('refresh'
+带参数且参数对象中有url时，会重置查询分页。（源码）
+
+19.选择器
+$(parentTr).find("td:eq(6)").find("div:eq(1)")
+
+20.layui switch（layui radio）
+form.on('switch(courseOpen)', function (data) {
+$("#course-open").parent().find(".layui-form-switch").prop("class","layui-unselect layui-form-switch layui-form-onswitch")
+$("#course-open").parent().find("em").text("公开")
+var x=data.elem.checked
+data.elem.checked=!x
+
+21.label的for，指向某个id，在ie中点击时会触发到，其他暂无
+
+22.jquery的消息收发机制
+$(window).on('message'
+window.onunload = function () {
+		window.opener.postMessage('close preview', '*');
+	}

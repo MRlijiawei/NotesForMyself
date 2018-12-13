@@ -1,0 +1,18 @@
+1.vue $refs的用法
+
+2.vue validate
+
+3.vue路由传参
+
+
+4.父组件清空子组件form
+this.$refs.solider.$refs.solider.resetFields()
+
+5.RadioGroup默认选中
+Radio的label前加“:”
+
+6.vue自定义标签组件
+
+7.echarts显示总数
+
+8.图片的旋转

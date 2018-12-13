@@ -1,0 +1,105 @@
+1.&amp;nbsp空格转成正常空格‘ ’的方法
+	1>先把字符串转码 let data = encodeURI(要转化的值)
+	2>接下来替换掉&nbsp空格 data = data .replace(/%C2%A0/g,'%20');
+	3>再转回来就ok了 data = decodeURI(data);
+
+decodeURI(encodeURI(data).replace(/%C2%A0/g,'%20'))
+
+2.获取url参数方法api（非自封装方法）
+new URLSearchParams(location.search).get("type")
+
+3？？不打断点不生效的问题？？debugger
+
+4.手动触发监听事件
+
+var ev = document.createEvent("HTMLEvents");  
+        			ev.initEvent("change", false, true);  
+        			$("#indexIframe").contents().find("#pageNumber")[0].dispatchEvent(ev);
+
+https://blog.csdn.net/bcfdsagbfcisbg/article/details/78480307
+
+5.四周阴影
+box-shadow:black 0px 0px 10px;//将颜色提到前面，且将h-shadow,v-shadow设为0px,实现四周阴影
+
+
+
+
+$.extend（）拷贝
+
+安卓、微信 提示浏览器打开
+
+ onClick="event.cancelBubble = true"避免点击子组件触发父级组件事件
+
+$("#mutualStart").parent().unbind().bind('click', function(e) {
+							if($("#mutualStart").attr("disabled") == "disabled") {
+								getNowTime();
+								if(mutualStartTime < nowTime && mutualEndTime > nowTime) {
+									layer.alert("互评进行中不允许修改互评开始时间");
+									$("#mutualStart").attr("disabled", "disabled")
+								} else {
+									$("#mutualStart").attr("disabled", false)
+									$("#mutualStart").click()
+								}
+							}
+						})
+						$("#mutualStart").unbind().bind('click', function($event) {
+							event.cancelBubble = true
+						})
+
+
+
+6.$emit传参
+
+7.图片的原始尺寸
+naturalWidth / naturalHeight
+获取元素位置
+offsetTop/offsetLeft
+
+图片等元素拖动时鼠标指针变成禁止样式，解决：e.preventDefault()
+否则会造成拖动时禁止掉自定义的move事件
+
+移动端屏幕尺寸
+window.screen.width
+
+8.移动端聚焦input屏蔽放大，且缩放倍数限制
+
+<meta name="viewport" content="width=drvice-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+
+9.created和mounted
+created:在模板渲染成html前调用，即通常初始化某些属性值，然后再渲染成视图。
+mounted:在模板渲染成html后调用，通常是初始化页面完成后，再对html的dom节点进行一些需要的操作。
+
+10.computed和watch
+computed用来监控自己定义的变量，该变量不在data里面声明，直接在computed里面定义，然后就可以在页面上进行双向数据绑定展示出结果或者用作其他处理；
+computed比较适合对多个变量或者对象进行处理后返回一个结果值，也就是数多个变量中的某一个值发生了变化则我们监控的这个值也就会发生变化，举例：购物车里面的商品列表和总金额之间的关系，只要商品列表里面的商品数量发生变化，或减少或增多或删除商品，总金额都应该发生变化。这里的这个总金额使用computed属性来进行计算是最好的选择
+
+watch主要用于监控vue实例的变化，它监控的变量当然必须在data里面声明才可以，它可以监控一个变量，也可以是一个对象，不可以只监控对象的某个属性。
+
+11.vue路由传参query和params
+params只能用name来引入路由
+this.$router.push({
+   name:"detail",///////////用params只能用name
+   params:{
+    name:'nameValue',
+    code:10011
+ }
+})
+
+query要用path来引入
+接收：this.$route.query.name和this.$route.params.name
+
+显示上：
+query显示在url里，params不显示
+
+
+12.vpn连接后没有外网，设置vpn的ipv4的高级选项中把使用远程默认网关去勾选
+
+13.
+vue使用location.search获取不到
+
+location.hash.substring(location.hash.indexOf('?') + 1).split(/&|=/)
+
+14
+props: {
+    dateRange: [String, Number]
+  }
