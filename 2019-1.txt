@@ -1,0 +1,87 @@
+1.vue强制刷新子组件
+其实就是强制使组件再次渲染一遍
+原理就是给组件加个v-if条件。简单起见可以直接使用弹窗的控制字段，也可以
+<el-dialog :visible.sync="templateDetailBoxShow" title="指标评价详情" width="1250px">
+  <detailMult :filters="detailFilter" v-if="hackReset"></detailMult>
+</el-dialog>
+this.hackReset = false
+	this.$nextTick(() => {
+		this.hackReset = true
+})
+
+2.vue富文本显示：v-html
+
+3.
+0.18 * 10
+
+1.7999999999999998
+
+0.18+0.02
+
+0.19999999999999998
+
+0.17+0.01
+
+0.18000000000000002
+
+4.el-tab-pane
+lazy
+
+
+5.打war包
+jar -cvf starmooc.war ./*
+
+6.分页sizechange最好把页码重置
+
+7.el-table表头样式
+ :header-cell-style="{background:'red'}"
+
+    width: 10%;
+    padding: 20px 3px;
+    color: blue;
+    font-size: 15px;
+    border: 1px solid #949494;
+    margin-left: 5%;
+    border-radius: 5px;
+
+margin-left: 10px;
+    display: inline-flex;
+    width: 90%;
+
+width: 70%;
+    /* text-overflow: ellipsis; */
+    /* overflow: hidden; */
+    /* white-space: nowrap; */
+    height: 95px;
+    border: 1px solid #949494;
+    border-radius: 5px;
+    padding: 3px;
+    background-color: whitesmoke;
+
+8.die-live和bind-unbind
+（1）版本不同，die的版本较低
+（2）die可以在页面无该元素时即可绑定，bind不行
+
+9.查看jquery版本
+$.fn.jquery
+
+10.自定义方法
+(function($){  
+        $.fn.serializeJson=function(){  
+            var serializeObj={};  
+            var array=this.serializeArray();  
+            var str=this.serialize();  
+            $(array).each(function(){  
+                if(serializeObj[this.name]){  
+                    if($.isArray(serializeObj[this.name])){  
+                        serializeObj[this.name].push(this.value);  
+                    }else{  
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];  
+                    }  
+                }else{  
+                    serializeObj[this.name]=this.value;   
+                }  
+            });  
+            return serializeObj;  
+        };  
+    })(jQuery); 

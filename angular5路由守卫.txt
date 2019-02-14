@@ -1,0 +1,47 @@
+angular2以上，路由有CanActivate守卫和另一个跳转守卫canDeactivate。
+两者一个是访问路由时触发，一个是离开路由页面时触发。
+import {CanActivate, Router} from '@angular/router';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+    roleType: string;
+
+    constructor(private testHeaderService: TestHeaderService, private _message: NzMessageService) {
+        this.testHeaderService = testHeaderService
+        this._message = _message
+    }
+
+    canActivate(): boolean | Observable<boolean> | Promise<boolean> {
+        return new Observable((observer) => {
+            this.testHeaderService.checkRole().then((res) => {
+                this.roleType = res['roleType']
+                if (this.roleType === 'teacher') {
+                    observer.next(true);
+                    observer.complete();
+                    return;
+                }
+                observer.next(false);
+                observer.complete();
+            })
+        });
+
+    }
+}
+
+async checkRole() {
+        let url = '/api/starmoocInfo/getUserInfo';
+        if (sessionStorage.aSessionId != null && sessionStorage.aSessionId !== '') {
+            url = '/api/starmoocInfo/getUserInfo?aSessionId=' + sessionStorage.aSessionId;
+        }
+        const res = await this.http.get(url).toPromise()
+        return res
+    }
+
+使用：
+        path: '',
+        component: QuestionsComponent,
+        canActivate: [AuthGuard],
+
+如果提前有保存角色信息，则可以直接取角色进行判断。但是要时时查询，就会有同步异步的问题。
+angular的httpclient请求是异步的。想要使用类似同步的效果，但是试了很久都没有成功。最后使用回调的方式。而守卫的判断和返回在回调中，会一直报错，因为必须要在外层有一个返回才行。也就是说，在查询返回之前，已经进行了判断，查询也就无效了。也试了定时器，一样会报语法错误。
+最后使用rxjs的Observable和Promise，实现类似同步的效果，在回调中完成了判断。

@@ -1,0 +1,82 @@
+一、选型
+1.框架——vue
+2.前端组件库——element-ui
+
+二、搭建
+1.vue-cli搭建
+1.1安装前准备
+npm install -g vue
+npm install -g vue-cli 
+npm install -g webpack
+
+1.2vue-cli安装
+vue init webpack datacenter-web
+
+1.3运行
+cd datacenter-web
+（安装依赖 npm install）
+npm run dev
+
+
+1.4发布
+npm run build
+
+2.element-ui搭建
+2.1安装依赖
+npm install style-loader -D
+npm install css-loader -D
+npm install file-loader -D
+
+2.2安装element-ui
+npm install element-ui --save 
+
+2.3修改 webpack.base.conf.js 的配置
+添加
+{
+        test: /\\\\\\\\.css$/,
+        loader: "style!css"
+    },
+    {
+        test: /\\\\\\\\.(eot|woff|woff2|ttf)([\\\\\\\\?]?.*)$/,
+        loader: "file"
+    } 
+
+##########格式化快捷键：shift + alt + f
+
+2.4main.js引入
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+
+
+
+
+引入数字校园的头部、侧边栏、面包屑后的问题
+需要安装sass，less，scss等，需要npm install -D webpack-dev-server
+npm install express
+
+npm rebuild node-sass
+
+npm install --save screenfull
+
+npm install --save iview
+
+vuex--的store
+
+aiox
+
+proxyTable配置
+
+
+
+
+vertical-align:text-top;顶部对齐
+
+Vue keep-alive
+
+vue路由嵌套
+
+await ？？？
+
+获取基础信息接口，onloadRequest，请求时需要cookie，当前可先启动本地云课堂，然后关闭然后启数据中心，使其同域的cookie可以使用
+
