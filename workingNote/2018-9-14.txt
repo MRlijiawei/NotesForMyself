@@ -16,7 +16,7 @@ word-break和break-all
 radio: form.on('radio(filter)', function (data) {})
 select: 用id获取值
 
-8.bootstarp-tabled 的resetsearch仅第一次生效，带参数refresh才可以，要带上url，才会把页码重置
+8.bootstarp-tabled 的resetsearch仅第一次生效，带参数refresh才可以，要带上url，才会把页码重置$table1.bootstrapTable('refreshOptions',{pageNumber: 1})
 
 9.$(this).prop("checked", true).click();
 $(this).clone()
