@@ -149,3 +149,5 @@ IE7可识别 *+div{color:red;}
 19.闭包
 
 20.动画和canvas
+
+21.实时监听input框的变化：oninput或onpropertychange （IE9），或双向绑定input值并watch触发
