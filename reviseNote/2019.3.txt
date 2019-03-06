@@ -13,7 +13,10 @@ switch (att) {
           do
           break
 
-4.var a = {'b':1}
+4.var a = {'b':1}：自动判断对象属性是否存在并取属性
 a && a.b
 
 5.vue直接在子组件中prop接收的值，初始化watch不到，需要computed转化一下才可以？
+
+6.vue Duplicate keys detected--key可能会冲突。
+解决方法：在循环中加入index，key使用index
