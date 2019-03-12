@@ -1,0 +1,9 @@
+1.vue/deep/
+深度样式应用，在style scope局部样式的情况下可传递到子组件。
+
+2.node报 SyntaxError: Unexpected token export
+原码：
+export default res
+解决：
+//exports.res
+module.exports = app
