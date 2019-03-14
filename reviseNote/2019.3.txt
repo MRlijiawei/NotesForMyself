@@ -40,3 +40,10 @@ a && a.b
 原型模式
 
 https://www.cnblogs.com/jnslove/p/7028487.html
+
+8.打包不打map文件
+9.打包后404。——将assetsPublicPath改为'./'
+
+10.onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+
+11.npm升级：npm i npm

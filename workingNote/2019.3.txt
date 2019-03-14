@@ -7,3 +7,9 @@ export default res
 解决：
 //exports.res
 module.exports = app
+
+3.打包进度
+在Webpack.XXX.conf.js中配置
+new webpack.ProgressPlugin(function handler(percentage, msg) {
+      console.log(percentage, msg)
+    })
