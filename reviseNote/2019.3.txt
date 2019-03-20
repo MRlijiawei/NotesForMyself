@@ -49,3 +49,8 @@ https://www.cnblogs.com/jnslove/p/7028487.html
 11.npm升级：npm i npm
 
 12.vue的watch的immediate
+
+13.阻止冒泡的3个方法：
+event.stopPropagation()
+event.preventDefault()
+return false
