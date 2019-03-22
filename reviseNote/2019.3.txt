@@ -54,3 +54,8 @@ https://www.cnblogs.com/jnslove/p/7028487.html
 event.stopPropagation()
 event.preventDefault()
 return false
+
+14.js延迟异步：
+放在body后边加载；defer="defer"（先与DOMContentLoaded执行？）；async（先于页面load事件执行）
+
+15.<noscript>不支持js或被禁用时显示的内容
