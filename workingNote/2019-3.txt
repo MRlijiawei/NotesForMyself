@@ -23,3 +23,14 @@ new webpack.ProgressPlugin(function handler(percentage, msg) {
 
 6.el-dialog的一个问题。弹窗关不掉的问题。
 创建和编辑共用的一个弹窗，创建可以正常关闭，而编辑关不掉。后来尝试把:visible.sync="singleExam.show" 改成:visible.sync="singleExamShow" ，解决。原因尚不明确？？？？
+
+7.mounted() {
+    this.$nextTick(() => {
+      this.setUrl()
+    })
+  }
+会卡死
+
+8.props传过去的值，第一时间获取不到，因为结构是： 跳路由--》组件mounted获取路由参数--》传给子组件。
+解决：在组件获取完成之后，给子组件进行一次处理（不行）
+在父组件计算完成后，直接传给子组件（可行）
