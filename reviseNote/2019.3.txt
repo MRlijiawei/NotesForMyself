@@ -59,3 +59,12 @@ return false
 放在body后边加载；defer="defer"（先与DOMContentLoaded执行？）；async（先于页面load事件执行）
 
 15.<noscript>不支持js或被禁用时显示的内容
+
+16.echarts标题居中：left:"center"
+echarts图例靠右：
+legend: {
+             data:['同龄普通孩子','已具备技能','已泛化技能','已掌握技能','学习中'],
+             orient: 'vertical',  //垂直显示
+             y: 'center',    //延Y轴居中
+             x: 'right' //居右显示
+ },
