@@ -31,10 +31,21 @@ new webpack.ProgressPlugin(function handler(percentage, msg) {
   }
 会卡死
 
-8.props传过去的值，第一时间获取不到，因为结构是： 跳路由--》组件mounted获取路由参数--》传给子组件。
+8.props传过去的值，第一时间获取不到，因为结构是： 跳路由--》组件mounted获取路由参数--》传给子组件。是异步的传值方式。
 解决：在组件获取完成之后，给子组件进行一次处理（不行）
 在父组件计算完成后，直接传给子组件（可行）
 使用watch（可行）
 
 9.测试发现，通过props传的值变化和通过refs访问子组件方法中使用接收到的参数变化的顺序问题。
 方法调用先于数据变化。
+
+10.<el-checkbox-group v-model="data.subjCodesList" class="sys_cls" @change="handleCheckSubChange">
+          <el-checkbox v-for="(item, index) in subjectList" :key="index" :label="item.subjName" v-model="item.subjCode" style="margin-left: 30px" @change="singleSelChange(index)">
+          </el-checkbox>
+        </el-checkbox-group>
+
+el-checkbox-group绑定值在change事件中，有的时候是value，有的时候是label，具体原因尚不明？？？测试发现checkbox使用:value和v-model不是现象的原因。这里label一直被当做label的样子。
+解决方法：
+<el-checkbox v-for="(item, index) in subjectList" :key="index" :label="item.subjCode" style="margin-left: 30px">{{item.subjName}}
+          </el-checkbox>
+11.el-checkbox-group和el-checkbox的change事件的先后顺序：后者在前
