@@ -49,3 +49,14 @@ el-checkbox-group°ó¶¨ÖµÔÚchangeÊÂ¼şÖĞ£¬ÓĞµÄÊ±ºòÊÇvalue£¬ÓĞµÄÊ±ºòÊÇlabel£¬¾ßÌåÔ­Ò
 <el-checkbox v-for="(item, index) in subjectList" :key="index" :label="item.subjCode" style="margin-left: 30px">{{item.subjName}}
           </el-checkbox>
 11.el-checkbox-groupºÍel-checkboxµÄchangeÊÂ¼şµÄÏÈºóË³Ğò£ººóÕßÔÚÇ°
+
+12.el-checkbox-groupµÄchangeÊ¼ÖÕ²»±äµÄÎÊÌâ¡£
+³¡¾°£º// this.singleSet = JSON.parse(JSON.stringify(obj))
+      const ediObj = JSON.parse(JSON.stringify(obj))
+      this.singleSet['title'] = '±à¼­Ñ§Éú³É¼¨»®·Ö·ÖÀà'
+      this.singleSet['subjCodesList'] = ediObj.subjCodes.split(',')
+      this.singleSet['subjNamesList'] = ediObj.subjNames.split(',')
+ÕâÑù¸³ÖµÖ®ºó£¬objÖĞÓÉÓÚÎŞsubjCodesListÕâ3¸öÊôĞÔ£¬µ¼ÖÂsingleSetµÄÄÚÈİ·¢ÉúÁË±ä»¯£¬Òò¶ø°ó¶¨µ½changeÊ±¼ä¾Í¼àÌı²»µ½±ä»¯ÁË¡£
+
+13.Í¬Ò»¸öecharts£¬ÔÙ´ÎsetOption²»Ë¢ĞÂ
+½â¾ö£ºÏÈclear()
