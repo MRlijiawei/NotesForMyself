@@ -60,3 +60,6 @@ el-checkbox-group°ó¶¨ÖµÔÚchangeÊÂ¼şÖĞ£¬ÓĞµÄÊ±ºòÊÇvalue£¬ÓĞµÄÊ±ºòÊÇlabel£¬¾ßÌåÔ­Ò
 
 13.Í¬Ò»¸öecharts£¬ÔÙ´ÎsetOption²»Ë¢ĞÂ
 ½â¾ö£ºÏÈclear()
+
+14.vue»ñÈ¡ÔªËØ¿í¶È
+this.$el.clientWidth
