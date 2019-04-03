@@ -1,0 +1,13 @@
+1.echarts的x轴显示不全，一般考虑的3种解决方法：grid移动缩进，formatter竖着排，rotate旋转
+	grid: {
+            left: '10%',
+            bottom: '35%'
+          },
+          xAxis: {
+            axisLabel: {
+              interval: 0/* ,
+              formatter: function(value) {
+                return value.split('').join('\n')
+              } */
+              // rotate: 30
+            },
