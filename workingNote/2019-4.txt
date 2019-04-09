@@ -1,2 +1,9 @@
 1.@include clearfix()
 Bootstrap的清除浮动方法
+
+2.el-data-picker获取到的时间与实际时间相差8小时问题
+原因：默认国际时间
+解决：加value-format="yyyy-MM-dd"
+
+3.同上组件，类型是日期范围，在编辑时，值无法修改，但实际绑定的值已经发送变化
+暂无解，改成了两个日期组件
