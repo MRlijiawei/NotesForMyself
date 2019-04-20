@@ -25,3 +25,6 @@ modal，modal-append-to-body都设为false
 
 7.vue打包不同环境的原理
 根据配置的url和端口找到对应的配置后，在请求的地方，将请求都替换为打包配置的服务ip端口的url
+
+8.vue富文本
+v-html
