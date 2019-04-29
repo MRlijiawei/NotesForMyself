@@ -28,3 +28,14 @@ modal，modal-append-to-body都设为false
 
 8.vue富文本
 v-html
+
+9.vue视图渲染和刷新相关
+受现代 JavaScript 的限制 (而且 Object.observe 也已经被废弃)，Vue 无法检测到对象属性的添加或删除。由于 Vue 会在初始化实例时对属性执行 getter/setter 转化，所以属性必须在 data 对象上存在才能让 Vue 将它转换为响应式的。
+对于已经创建的实例，Vue 不允许动态添加根级别的响应式属性。但是，可以使用 Vue.set(object, propertyName, value) 方法向嵌套对象添加响应式属性。Vue.set(vm.someObject, 'b', 2)
+还可以使用 vm.$set 实例方法，这也是全局 Vue.set 方法的别名：
+this.$set(this.someObject,'b',2)
+有时你可能需要为已有对象赋值多个新属性，比如使用 Object.assign() 或 _.extend()。但是，这样添加到对象上的新属性不会触发更新。在这种情况下，你应该用原对象与要混合进去的对象的属性一起创建一个新的对象。
+// 代替 `Object.assign(this.someObject, { a: 1, b: 2 })`
+this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })
+
+this.$forceUpdate()

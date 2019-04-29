@@ -7,3 +7,26 @@ Bootstrap的清除浮动方法
 
 3.同上组件，类型是日期范围，在编辑时，值无法修改，但实际绑定的值已经发送变化
 暂无解，改成了两个日期组件
+
+4.视频音频禁止快进快退
+<video
+    id="kingdom-video"
+    :src="xxx"
+    preload
+    controls
+    v-if="type==='video'">
+    </video>
+
+onTimeUpdate() {
+      // 学习中
+      if (this.playObj.effectiveDuration < this.playObj.totalDuration) {
+        // 禁止快进
+        if (this.videoAss.currentTime - this.lastTimeString > 2) {
+          this.videoAss.currentTime = this.lastTimeString
+        } else {
+          this.lastTimeString = this.videoAss.currentTime
+        }
+      }
+}
+this.videoAss = document.getElementById('kingdom-video')
+    this.videoAss.addEventListener('timeupdate', () => { this.onTimeUpdate() })
