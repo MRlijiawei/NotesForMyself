@@ -1,0 +1,202 @@
+这些注册相关的东西之前或多或少都遇到过，这里做一下简单总结
+
+1.密码强度校验的简单实现
+原理和思路比较简单，暂时没有做太复杂的情况处理：
+密码一般组成是大小写字母数字和特殊符号，所以就可以通过长度和字符类型来做强度校验。
+这里通过进度条和不同颜色区分，以正则判断转化为安全系数百分比进行展示的。部分代码如下，后期再上传项目代码：
+
+format (pct) {
+      // 做一个密码非法的标志--1--也可以用form校验
+      return pct > 80 ? '密码非常安全' : pct > 60 ? '密码安全' : pct > 40 ? '密码一般' : pct === 0 ? '' : pct === 1 ? '密码不满足要求' : '密码危险'
+    },
+    checkPwdLevel (val) {
+      this.pwdLevel = 0
+      if (this.pdwReg.test(val)) {
+        // 采用简单的组合方式校验，暂不校验复杂度相似性等
+        if (/[a-z]/.test(val)) this.pwdLevel += 25
+        if (/[A-Z]/.test(val)) this.pwdLevel += 25
+        if (/[0-9]/.test(val)) this.pwdLevel += 25
+        if (/[`~!@#$^&*()=|{}':;',\\[\].<>\\/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]/.test(val)) this.pwdLevel += 25
+        switch (this.pwdLevel) {
+          case 0:
+          case 25:
+            this.levelColor = 'red'
+            break
+          case 50:
+            this.levelColor = '#e6a23c'
+            break
+          case 75:
+            this.levelColor = '#1989fa'
+            break
+          case 100:
+            this.levelColor = '#5cb87a'
+            break
+          default:
+            this.levelColor = '#e6a23c'
+            break
+        }
+      }
+
+
+2.前端生成验证码
+效果：简单的数字和字母验证码，参数可控，样式可控，暂时没有添加其他形式和字符比如文字、图片、拖动、答题等。除了拖动置为，其余效果的原理都类似。
+
+原理：使用随机函数生成指定长度的验证码，校验时直接对比即可，可忽略大小写。
+
+部分代码：
+<template>
+  <div><input type="button"  @click="createCode"  class="verification" v-model="checkCode"/></div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      // 配置项：长度、范围
+      codeLength: 4,
+      codeRandom: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+        'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      checkCode: ''
+    }
+  },
+  methods: {
+    createCode () {
+      let code = ''
+      let index
+      let codeSlice
+      for (let i = 0; i < this.codeLength; i++) {
+        // 取得随机数的索引（0~35）
+        index = Math.floor(Math.random() * 36)
+        // 根据索引取得随机数加到code上
+        if (Math.random() * 2 > 1) {
+          codeSlice = this.codeRandom[index].toLowerCase()
+        } else {
+          codeSlice = this.codeRandom[index]
+        }
+        code += codeSlice
+      }
+      // 把code值赋给验证码
+      this.checkCode = code
+    }
+  },
+  mounted () {
+    this.createCode()
+  }
+}
+</script>
+<style lang='scss' scoped>
+.idtc_input{
+        font-family: 'Exo 2', sans-serif;
+    border: 1px solid #fff;
+    color: #fff;
+    outline: none;
+    border-radius: 12px;
+    letter-spacing: 1px;
+    font-size: 17px;
+    font-weight: normal;
+        background-color: rgba(82, 56, 76, 0.15);
+        padding: 5px 0 5px 10px;
+    margin-left: 30px;
+    height: 30px;
+    margin-top: 25px;
+    border: 1px solid #e6e6e6;
+}
+.verification{
+    border-radius: 12px;
+    width:100%;
+    letter-spacing:10px;
+    /* margin-left: 50px; */
+    height: 40px;
+    /* transform: translate(-15px,0); */
+    background: linear-gradient(to top right, #a5a5a2 0%, #f5f5f5 55%, #cecdc0 100%);
+    cursor: pointer;
+}
+.captcha{
+    height: 50px;
+    text-align: justify;
+}
+</style>
+
+3.json和formData互相转换
+json转formData
+const formData = new FormData();
+Object.keys(params).forEach((key) => {
+formData.append(key, params[key]);
+});
+
+formData转json
+var jsonData = {};
+formData.forEach((value, key) => jsonData[key] = value);
+
+
+4.css 计算属性
+目前实践中使用的还不太多，偶尔会用到
+就是用变量代替具体数值，浏览器可以自动进行计算。好处是维护方便
+    line-height: var(--md-title-height);
+
+5.文字效果——filter滤镜
+示例：文字外发光
+    color: rgb(var(--GG050-rgb));
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.35));
+这是谷歌首页的样式。
+滤镜效果filter：
+none | blur() | brightness() | contrast() | drop-shadow() | grayscale() | hue-rotate() | invert() | opacity() | saturate() | sepia() | url()
+
+滤镜可叠加，效果就和PS的滤镜一样
+
+示例：
+.blur {
+    -webkit-filter: blur(4px);
+    filter: blur(4px);
+}
+
+.brightness {
+    -webkit-filter: brightness(0.30);
+    filter: brightness(0.30);
+}
+
+.contrast {
+    -webkit-filter: contrast(180%);
+    filter: contrast(180%);
+}
+
+.grayscale {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+.huerotate {
+    -webkit-filter: hue-rotate(180deg);
+    filter: hue-rotate(180deg);
+}
+
+.invert {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.opacity {
+    -webkit-filter: opacity(50%);
+    filter: opacity(50%);
+}
+
+.saturate {
+    -webkit-filter: saturate(7);
+    filter: saturate(7);
+}
+
+.sepia {
+    -webkit-filter: sepia(100%);
+    filter: sepia(100%);
+}
+
+.shadow {
+    -webkit-filter: drop-shadow(8px 8px 10px green);
+    filter: drop-shadow(8px 8px 10px green);
+}
+
+另外，关于不同的颜色码的透明度，
+rgba: rgba(0, 0, 0, 0.35)
+hex: #00000059(后两位表示透明度，前6位表示颜色)
+hsla：hsla(0, 0%, 0%, 0.35)
