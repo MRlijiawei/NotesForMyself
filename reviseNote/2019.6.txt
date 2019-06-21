@@ -1,0 +1,8 @@
+1.密码框自动填充的规避
+autocomplete="new-password" 
+
+2.监听路由
+watch: {
+    $route () {
+      this.type = this.$route.query.type
+    },
