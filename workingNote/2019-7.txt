@@ -3,3 +3,5 @@
 eg：
 <el-input-number :min="0" v-model="scope.row.rank" placeholder="请输入名次" style="width:125px" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input-number>
 
+2.vue的done()
+类似return false
