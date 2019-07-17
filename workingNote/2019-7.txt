@@ -1,0 +1,5 @@
+1.输入控制，只能输入正整数
+ onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"
+eg：
+<el-input-number :min="0" v-model="scope.row.rank" placeholder="请输入名次" style="width:125px" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input-number>
+
