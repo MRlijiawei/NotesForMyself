@@ -5,3 +5,19 @@ eg：
 
 2.vue的done()
 类似return false
+
+3.屏蔽鼠标事件
+css:
+pointer-events: none;
+html：
+<noscript></noscript>
+
+4.屏蔽audio、video的下载
+audio::-webkit-media-controls {
+　　overflow: hidden !important
+}
+audio::-webkit-media-controls-enclosure {
+　　width: calc(100% + 32px);
+　　margin-left: auto;
+}
+另外，oncontextmenu="return false"、controls="controls" controlsList="nodownload"一定程度可以配合使用
