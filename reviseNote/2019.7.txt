@@ -1,0 +1,60 @@
+1.css画心形总结
+.heart {
+  width: 10px;
+  height: 10px;
+  /* position: fixed; */
+  background: #fff;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  display: inline-block;
+}
+
+.heart:after,
+.heart:before {
+  content: '';
+  width: inherit;
+  height: inherit;
+  background: inherit;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  position: absolute;
+}
+
+.heart:after {
+  top: -5px;
+  left: 0px;
+}
+
+.heart:before {
+  left: -5px;
+}
+
+2.css画等边三角形
+	/* margin: 0 auto; */
+    /* width: 0px; */
+    /* height: 0px; */
+    /* border-left: 5.2px solid transparent; */
+    border-top: 100px solid transparent;
+    border-right: 173.2px solid #17ad17;
+    border-bottom: 100px solid transparent;
+
+底边平行：
+	border-right: 100px solid transparent;
+    border-bottom: 173.2px solid #17ad17;
+    border-left: 100px solid transparent;
+
+结论：只需要3边border即可，主边（平行于上下左右哪个的方向）为根号3于其他两条边即可
+
+3.css画直角三角形
+    width: 0;
+    height: 0;
+    border-width: 0 40px 40px;
+    border-style: solid;
+    border-color: transparent transparent blue;
+
+带border：
+使用伪元素+绝对定位，令内部三角形略小于外部三角形即可；
+做成三角形箭头：
+同上，使底边重合即可。
