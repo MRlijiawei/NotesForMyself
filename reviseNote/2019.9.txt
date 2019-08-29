@@ -1,3 +1,10 @@
+1.vue的mixin
+
+2.cropper图片选择裁剪插件
+
+3.css /deep/
+
+4.vuex中的数据获取，mouted时获取不到？改成created也获取不到？使用watch是一种思路
 
 5.火狐浏览器使用blod下载文件时兼容性问题：
 download(row) {
