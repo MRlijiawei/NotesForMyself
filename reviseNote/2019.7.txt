@@ -63,3 +63,8 @@
 原因：单输入框的form，回车自动提交。
 解决：
 禁用全局或input的回车事件onkeydown；或增加一个隐藏的输入框
+
+5.Array  includes判断包含
+
+6.echarts组件不能初始化存在v-if的组件？
+可能和及时刷新有关系
