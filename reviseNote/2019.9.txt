@@ -1,0 +1,16 @@
+
+5.火狐浏览器使用blod下载文件时兼容性问题：
+download(row) {
+      downloadFile({ id: row.fileId }).then(res => {
+        // window.open(URL.createObjectURL(res.data))
+        const blob = new Blob([res.data], { type: row.fileType })
+        // var a = document.createElement('a')兼容火狐
+        const a = document.getElementById('downFA')
+        a.href = URL.createObjectURL(blob)
+        a.download = row.fileName
+        a.click()
+        // URL.revokeObjectUrl(a.href)
+      })
+    }
+
+改成页面先写死一个a标签，然后 在下载时获取，而不是在下载时再动态生成
