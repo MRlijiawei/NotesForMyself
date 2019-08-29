@@ -21,3 +21,20 @@ download(row) {
     }
 
 改成页面先写死一个a标签，然后 在下载时获取，而不是在下载时再动态生成
+
+6.关于页面响应式和动态刷新
+vue是响应式的，但是由于 JavaScript 的限制，Vue 不能检测对象属性的添加或删除，比如：
+定义了data：form：{}对于form中的属性可以动态刷新，但是当给form新增了别的属性之后，则新增的属性的module和view不能双向响应刷新。此时需要使用set或 Object.assign来进行新增绑定属性。
+（（Object.assign() 或 _.extend()？？？？））
+set：一个，assign：可多个
+Vue.set(vm.userProfile, 'age', 27)
+vm.$set(vm.userProfile, 'age', 27)
+vm.userProfile = Object.assign({}, vm.userProfile, {
+  age: 27,
+  favoriteColor: 'Vue Green'
+})
+eg：this.$set(this.form, 'holder', res.data)
+eg：this.form = Object.assign({}, this.form, {
+  age: 27,
+  favoriteColor: 'Vue Green'
+}}
