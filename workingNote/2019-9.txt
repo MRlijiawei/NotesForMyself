@@ -1,0 +1,21 @@
+1.v-html表达式中不能使用filter方法，比如：
+v-html="txt|testTxt"
+就是错的，会报找不到，而且页面会变成0。
+正确的方法：使用function：
+v-html="testTxt(txt)"
+
+2.富文本中图片超出页面的问题解决：
+首先，写一个全局样式，比如：
+.rich-image {
+  max-width: 100%;
+  height: auto;
+}
+然后对富文本进行替换操作：
+// 富文本图片超出处理
+export function transRichImg(val) {
+  if (!val) return ''
+  return val.replace(/\<img/gi, '<img class="rich-image"')
+}
+
+总结：此前遇到过个别场景需要把富文本的a标签的样式进行修改，当时直接在所在的vue组件中使用全局样式进行修改的（特定样式选择器，比如富文本的父元素的class+a），同理，也可以采用该方法进行修改
+
