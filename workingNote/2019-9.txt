@@ -19,3 +19,6 @@ export function transRichImg(val) {
 
 总结：此前遇到过个别场景需要把富文本的a标签的样式进行修改，当时直接在所在的vue组件中使用全局样式进行修改的（特定样式选择器，比如富文本的父元素的class+a），同理，也可以采用该方法进行修改
 
+3.el-tooltip组件出现不生效现象：
+网上有类似bug，但是我的现象的原因是因为v-if我使用在了标签内部的组件上，导致时而生效时而不生效，后把v-if放到了tooltip标签上，发现问题解决；
+另外，table-column可直接使用show-overflow-tooltip
