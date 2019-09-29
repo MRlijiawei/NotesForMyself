@@ -38,3 +38,9 @@ eg：this.form = Object.assign({}, this.form, {
   age: 27,
   favoriteColor: 'Vue Green'
 }}
+
+7.元素选择器循环
+元素选择器选中的元素是个数组，有长度属性，但是不是严格意义的数组，所以不能使用数组的forEach。它有自己的循环，叫each，且两个参数第一个是index,第二个是e，与普通js数组的forEach参数顺序相反。
+
+8.$(window).height() 和 $(document).height()
+前者是可见区域的高度，后者是文档高度
