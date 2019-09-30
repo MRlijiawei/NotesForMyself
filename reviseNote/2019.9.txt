@@ -44,3 +44,6 @@ eg：this.form = Object.assign({}, this.form, {
 
 8.$(window).height() 和 $(document).height()
 前者是可见区域的高度，后者是文档高度
+
+9.jquery选择器parent和parents
+前者选取的是上一级，而后者顾名思义可以选择到全部上级，因而可以结合其他选择器选择特定父元素，如$($('.del_con')[0]).parents('.connecter')
