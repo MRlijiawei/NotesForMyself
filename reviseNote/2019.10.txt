@@ -1,0 +1,42 @@
+1.html srcipt的延迟加载
+立即下载，但延迟执行
+eg：在head中即可引入js，但是会在执行到</html>时才执行
+<script type="text/javascript" defer="defer" src="..."></script>
+
+在xhtml中，要把defer设置为defer="defer"
+可能有兼容性问题，因而还是放在最后比较保险
+
+2.类似defer，有异步脚本
+async
+因为是异步加载，因而很可能会有dom还没加载完就执行到js脚本的情况，因而异步js最好不要在加载期间修改dom。异步脚本一定会在页面的load事件之前执行，但可能会在DOMContentLoaded时间之前或之后执行
+
+3.文档模式
+doctype文档类型
+混杂模式（quirks mode）和标准模式（standards mode）
+
+4.noscript元素标签
+浏览器不支持脚本或脚本被禁用时显示
+
+5.5种基本数据类型
+Undefined、Null、Boolean、Number、String
+复杂数据类型——Object
+
+6.typeof返回的类型
+undefined、boolean、string、object、function、number
+typeof是操作符而不是函数
+
+null == undefined//true
+
+Object(1)
+ //Numbe{1}
+
+7.科学计数法e
+3.142e7 = 3.142*10的7次方
+Infinity无穷和isFinite()函数（在最大最小值中间则返回true）
+Number.MAX_VALUE等
+
+8.NaN
+NaN == NaN// false
+isNaN('10')// false
+isNaN('sss')// true
+isNaN(true) // false（true==1）
