@@ -40,3 +40,6 @@ NaN == NaN// false
 isNaN('10')// false
 isNaN('sss')// true
 isNaN(true) // false£¨true==1£©
+
+
+&times;
