@@ -51,3 +51,25 @@ $('body').append('<span>www.aa.com?data={{data}}&timestamp={{timestamp}}</span>'
 $('#widget_my_zzk span').eq(0).text('www.aa.com?data={{data}}&timestamp={{timestamp}}')
 使用text()。注eq()的用法。
 
+10.flex布局回顾总结
+10.1 flex布局简介：
+	flex是flexible box（弹性盒子）的缩写，故flex布局也被叫作“弹性布局”。
+任何一个容器都可以指定为flex布局display:flex;；行内元素也可以使用flex布局display:inline-flex;；webkit内核的浏览器需加上-webkit  display:-webkit-flex;。
+设置为flex布局后，子元素的float、clear、vertical-align属性失效，此时使用justify-content、align-items来设置对齐方式。
+10.2 概念：
+	flex布局的元素被称为flex容器，子元素被称为容器的flex项目；容器默认水平（main）和垂直（cross）两个坐标轴；项目默认沿main轴排列，其单个项目占据的空间叫作main size和cross size。
+10.3 属性：
+	flex-direction，flex-wrap，flex-flow，justify-content，align-items，align-content共6个属性
+flex-direction：顾名思义，布局的方向，其值有row | row-reverse |  column | column-reverse，顾名思义，效果就是横排、横排倒序、竖排、竖排倒序，默认row；
+flex-wrap：顾名思义，布局超出设置，其值有nowrap | wrap | wrap-reverse，分别是不换行，换行，换行倒序，不换行就是直接压缩排布不换行，后两者是换行，区别是wrap换行后新行在下边，后者相反，默认nowrap；
+flex-flow：是前边两个属性的缩写，是其合在一起的写法，比如：flex-flow: column-reverse nowrap;；
+justify-content：内容项目的对齐方式，且是在main轴（横向）对齐方式，其值有flex-start | flex-end | center | space-between |space-around五个，效果分别是左对齐，右对齐，居中，两端对齐（中间等距），每个项目（子元素）间隔相等对齐，后3个属性都是居中，有一定类似，差别在于，center仅居中，不会计算除了两边之外的距离，space-between则是先帖这两边，剩余空间等距分割，space-around则是将两边纳入距离分割，但是由于中间部分是两个距离连在一起的，所以比两边的距离大一倍；
+align-items：和前边一个属性类似，这个属性是设置纵向对齐方式，其值有flex-start | flex-end | center |baseline | stretch一样是5个，前3个同理是顶部和底部和居中对齐，baseline是以项目的第一行文字的基线对齐，stretch则是纵向拉伸占满（项目不设置高度或设为auto）（设置高度则是顶部对齐！）；
+align-content：多根轴线对齐，有flex-start | flex-end | center | spance-between | space-around |stretch 6个值，分别是顶部对齐、底部对齐、上下居中、上下贴边等距、上下等距、上下贴边拉伸。默认第6个；
+以上是flex容器的属性，以下是内部项目的属性：
+order：顾名思义，顺序的意思，其值是任意整数integer（可以为负）；
+flex-grow：放大比例，默认0，其值是任意非负整数number；
+flex-shrink：缩小比例，默认1，等比例缩小。其值同上，如果设置为0，则不会被缩小；
+flex-basis：意为固定宽度（main size），默认auto（自动缩放），如果设置为固定的长度如200px，则不会被缩放；
+flex：flex-grow，flex-shrink和flex-basis的简写，默认值为0 1 auto。其有两个快捷值，auto（1 1 auto）和none（0 0 auto）；
+align-self：自身对齐方式，用于覆盖容器（父元素）的align-items属性，默认auto（auto意为继承父元素的align-items属性，如果没有父元素，则效果同stretch拉伸），其值有auto | flex-start | flex-end | center | baseline | stretch比align-items多了个auto(继承父元素，其实还是相当于没有auto的另外5个属性)；
