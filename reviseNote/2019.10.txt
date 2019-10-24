@@ -42,4 +42,12 @@ isNaN('sss')// true
 isNaN(true) // false（true==1）
 
 
-&times;
+9.&times;
+和&nbsp;同理，‘&nbsp;’是空格，‘&times;’是x。
+在页面渲染时，&timestamp=会被转义为xtamp=，如：
+$('body').append('<span>www.aa.com?data={{data}}&timestamp={{timestamp}}</span>')
+而$('body').append('www.aa.com?data={{data}}&timestamp={{timestamp}}')是不会被转义的。
+解决办法：
+$('#widget_my_zzk span').eq(0).text('www.aa.com?data={{data}}&timestamp={{timestamp}}')
+使用text()。注eq()的用法。
+
