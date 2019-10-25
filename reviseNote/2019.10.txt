@@ -75,3 +75,8 @@ flex-basis£ºÒâÎª¹Ì¶¨¿í¶È£¨main size£©£¬Ä¬ÈÏauto£¨×Ô¶¯Ëõ·Å£©£¬Èç¹ûÉèÖÃÎª¹Ì¶¨µÄ³¤¶
 flex£ºflex-grow£¬flex-shrinkºÍflex-basisµÄ¼òÐ´£¬Ä¬ÈÏÖµÎª0 1 auto¡£ÆäÓÐÁ½¸ö¿ì½ÝÖµ£¬auto£¨1 1 auto£©ºÍnone£¨0 0 auto£©£»½¨ÒéÓÅÏÈÊ¹ÓÃÕâ¸öÊôÐÔ
 align-self£º×ÔÉí¶ÔÆë·½Ê½£¬ÓÃÓÚ¸²¸ÇÈÝÆ÷£¨¸¸ÔªËØ£©µÄalign-itemsÊôÐÔ£¬Ä¬ÈÏauto£¨autoÒâÎª¼Ì³Ð¸¸ÔªËØµÄalign-itemsÊôÐÔ£¬Èç¹ûÃ»ÓÐ¸¸ÔªËØ£¬ÔòÐ§¹ûÍ¬stretchÀ­Éì£©£¬ÆäÖµÓÐauto | flex-start | flex-end | center | baseline | stretch±Èalign-items¶àÁË¸öauto(¼Ì³Ð¸¸ÔªËØ£¬ÆäÊµ»¹ÊÇÏàµ±ÓÚÃ»ÓÐautoµÄÁíÍâ5¸öÊôÐÔ)£»
 Ê¾Àý¼ûdemos\files\flex²¼¾ÖÊ¾Àý
+
+11.ÉúÃüÖÜÆÚº¯ÊýµÄÐ´·¨Çø±ð
+Õý³£ÊÇÓÃxxx(){}£¬¶øÈç¹ûÊ¹ÓÃxxx:()=>µÄes6Ð´·¨£¬ËäÈ»Ò²¿ÉÒÔ´¥·¢£¬µ«ÊÇÔÚ·½·¨µÄÊµÏÖÄÚ²¿»ñÈ¡²»µ½this×é¼þ¡£Ô­ÒòÓ¦¸ÃÊÇºÍÁ½ÖÖ·½·¨¶¨ÒåµÄÇø±ðÓÐ¹Ø£¬Ö®Ç°Ôø¶Áµ½¹ýÒ»ÆªÎÄÕÂ£¬´óÒâ¾ÍÊÇºóÕß»á½øÐÐÔ¤Ö´ÐÐÖ®ÀàµÄ²Ù×÷£¬ÔÚÒ³ÃæÃ»ÓÐÍê³É¼ÓÔØÊ±¾ÍÖ´ÐÐµ½ÁËÕâÀï¡£
+
+12.backgorund-size:cover ºÍobject-fit:cover
