@@ -1,0 +1,44 @@
+1.Number类型
+8进制
+0开头，如var octNum = 070
+16进制
+0x开头，如var hexNum = 0xA//不区分大小写
+Number()
+parseInt('aa123')//NaN
+parseInt('123aa')//123
+parseInt('AF', 16)//175
+parseFloat只解析10进制，没有第二个参数
+（Object.valueOf???）
+
+2.String
+2.1字符字面量（转义字符）
+\n换行，\t制表，\b空格，\r回车，\f进纸，\\斜杠，\'\"单双引号，\xnn十六进制nn表示的字符，\unnn十六进制nnn表示的Unicode字符
+2.2转化为字符串的方法：toString（），String（），+""
+注意：toString可以有一个参数，表示进制数，如10.toString(2)//"1010"
+此外，null和undefined是不支持toString的，但是可以String(null)//"null"
+此外，对象转化为string要用JSON.stringify，直接toString会"[object Object]"
+
+3.Object
+3.1属性方法：
+constructor//Object()
+hasOwnProperty(xxx)//是否存在该属性
+isPrototypeOf(xx)//是否是另一个对象的原型
+propertyIsEnumerable(xxx)//属性是否能用for-in枚举
+
+toLocalString()//
+toString()
+valueOf()
+
+4.运算符
+4.1一元运算符（+xx，-xx）
+var o = {
+	valueOf: function() { return -1 }
+}
+o=+o//-1
+
+var b = 'a'
+b=+b//NaN
+'a' =+'a'//会报错
+4.2位运算符
+32位，第一位0正1负，其余31位表示值，二进制，负数等于正数的反码+1。
+~（非）,&（与），|（或），^（异或）
