@@ -1,0 +1,192 @@
+1.Number类型
+8进制
+0开头，如var octNum = 070
+16进制
+0x开头，如var hexNum = 0xA//不区分大小写
+Number()
+parseInt('aa123')//NaN
+parseInt('123aa')//123
+parseInt('AF', 16)//175
+parseFloat只解析10进制，没有第二个参数
+（Object.valueOf???）
+
+2.String
+2.1字符字面量（转义字符）
+\n换行，\t制表，\b空格，\r回车，\f进纸，\\斜杠，\'\"单双引号，\xnn十六进制nn表示的字符，\unnn十六进制nnn表示的Unicode字符
+2.2转化为字符串的方法：toString（），String（），+""
+注意：toString可以有一个参数，表示进制数，如10.toString(2)//"1010"
+此外，null和undefined是不支持toString的，但是可以String(null)//"null"
+此外，对象转化为string要用JSON.stringify，直接toString会"[object Object]"
+
+3.Object
+3.1属性方法：
+constructor//Object()
+hasOwnProperty(xxx)//是否存在该属性
+isPrototypeOf(xx)//是否是另一个对象的原型
+propertyIsEnumerable(xxx)//属性是否能用for-in枚举
+
+toLocalString()//
+toString()
+valueOf()
+
+4.运算符
+4.1一元运算符（+xx，-xx）
+var o = {
+	valueOf: function() { return -1 }
+}
+o=+o//-1
+
+var b = 'a'
+b=+b//NaN
+'a' =+'a'//会报错
+4.2位操作符
+32位，第一位0正1负，其余31位表示值，二进制，负数等于正数的反码+1。
+~（非）,&（与），|（或），^（异或）此外，<<左移（右补0），>>有符号的右移（保留符号位），>>>无符号右移
+4.3布尔操作符
+!,&&,||
+4.4运算
++-*/%（求模，取余）
+4.5关系操作符
+>，<，>=，<=，==，!=，===，!==
+4.6条件操作符
+xxx ? xxx : xxx
+4.7赋值操作符
+=，+=，-=，*=，/=，%=，<<=，>>=，>>>=
+4.8逗号运算符
+var num1 = 1, num2 = 2;
+var num = (1,2,3,4) //4
+
+5.语句
+if-else，do-while（先执行循环体，再判断条件），while（先判断再执行循环体），for（类同while），for-in（精准迭代语句，用来枚举对象的属性，下例），label语句（？？？），break和continue，width语句（将代码作用域设置到同一个特定对象，下例）,switch语句
+var propName
+for（//（推荐这里用var）var propName in window）{document.write(propName)}
+
+var qs = location.search.substring(1)
+var hostName = location.hostName
+可以写成
+with(location){
+	var qs = search.substring(1)
+	var hostName = hostName
+}
+
+扩展：无限循环的一种写法：
+for(;;) { doSomething() }
+
+6.函数
+6.1参数
+注：arguments对象，参数，是个类似数组的结构但不是真正意义的数组，如：
+function sayHi(xxx//(参数非必须)) {alert(arguments[0]+','+arguments[1]+arguments.length)}
+6.2没有重载
+即，同名函数以后来定义者为最终
+
+7.变量、作用域、内存
+7.1基本类型和引用类型（保存在内存中的对象）
+动态属性，复制变量值（引用类型的指针复制和浅copy），传递参数（参数是函数的局部变量，下例。局部变量在函数执行完后销毁）
+
+例：基本类型和引用类型的参数传递。函数定义省略
+var count = 20
+var result = addTen(count)//count还是20
+
+var person = new Object()
+setName(person)//person.name有了值
+另外：
+function setName(obj) {
+	obj.name = '1'
+	obj = new Object()
+	obj.name = '2'
+}
+setName(person)//此时person.name 是‘1’，因为2是局部的
+
+检测类型：
+typeof可判断基本类型；instanceof（person instanceof Object）。扩展方法：Object.prototype.toString.call(xx).substr...，给判断对象添加上[object，因而截取后边的即可。
+
+另外，apply和call的异同，两种都是实现继承用的，区别是apply只有2个参数，call可以多个
+
+7.2
+延长作用域：try catch的catch语句块，with语句块；
+没有块级作用域：if，for循环
+作用域查询
+
+7.3内存管理，内存泄露
+内存回收机制，垃圾收集，执行到分配内存，执行完回收内存，定时周期性回收
+策略：标记清除，引用计数（循环和互相引用会导致内存无法释放导致泄露，可将引用置null断开连接），性能问题（。。。），手动回收（window.xxxcollect...()）
+内存管理（解除引用：不用的数据置null，方便下次回收）
+
+
+8.引用数据类型
+定义方法：构造函数法（=new Array()），字面量法（={xx:xx}）
+对象属性访问方法：点访问（xxx.xxx），方括号（xxx[yyy]，yyy可以是变量，可以是非正常字符如'first name'）
+8.1Array
+①
+new Array(1,2,3)
+length属性是可操作的，非只读，因而可以修改length来实现末尾增减！（如colors[colors.length]=xx来给末尾添加）
+②
+检测数组：xxx instanceof Array，es5加了Array.isArray()
+③
+转换方法：toString(),toLocaleString(),valueOf(),前两者是分别对数组元素执行toString()和toLocaleString()后再xxx，理论上两者是相同的结果，但如果将两个方法重写为不同则结果可能会不同。另外，还有join()方法转换为字符。注意如果有null或undefined元素，转换为字符后是空字符串
+④
+栈方法：后入先出
+push（（可一次多个）返回数组最终长度）和pop（返回末尾被移出的项）方法
+⑤
+队列方法：先进先出
+shift(移除数组第一项，返回该项)，unshift(从数组前端插入（可一次多个）并返回数组最终长度)
+⑥
+重排序方法
+.reverse()(反转),.sort()（排序（注意是相当于先转成字符串再按字符串大小升序排序，因而‘2’>‘10’））
+因而sort方法可以接收一个参数来指定哪个位于哪个前边
+xxx.sort(function(a,b){return a-b//降序})
+⑦
+操作方法：
+concat()（末尾添加，可多个，若不是数组则作为单项数组处理，不影响原数组）
+slice()截取两个参数作为起止点之间的元素（包含起点元素，不包含结尾元素。若只有起点，则截取到结尾）生成新数组，不影响原数组
+splice()任意指定位置删除或插入或替换任意元素（参数分别是目标位置的index、删除长度（将删除长度设置为0则可实现插入）、第二个参数为0时要插入的元素，可以多个，而如果第二个参数是1，则表示替换）
+⑧
+位置方法
+返回查找元素的位置。可接收两个参数，第一个是要查找的元素，第二个是查找的起点下标
+indexOf()
+lastIndexOf()
+区别：前者是从头往后找，后者是从后往前找
+⑨
+迭代方法（遍历）
+every()数组的每一项都满足
+filter()数组中满足的项
+forEach()遍历，没有返回
+map()遍历，返回每一项return的元素组成的数组
+some()数组中存在满足的
+它们的参数（参数是一个方法）方法的参数有3个，分别是当前元素、当前下标index、数组本身
+⑩
+缩小方法
+reduce和reduceRight
+类似9，也是对元素进行遍历，且前者是从前往后，后者是从后往前
+不同的是，其参数方法的参数有4个，分别是前一个值、当前值、index、数组。其中前1个值是函数return的值（第一次则是第一项）。其应用就是数组求和：
+xxx.reduce(function(a,b,c,d){return a+b})
+
+8.2Date
+1970年1月1日凌晨后的毫秒数
+①
+Date.parse()和Date.UTC()
+都是将时间格式转换为毫秒
+不同：参数的形式不同，Date.parse()接收的是日期时间的字符串（如2/2/2019,2019-02-02T02:02:02）
+而Date.UTC()接收的参数是多个，分别是年、月（从0开始计的，比如10月就是9）、日、时、分、秒
+如new Date(Date.UTC(2019,1,2,2,2,2))
+而Date()构造函数本身是模仿UTC的，所以可以new Date(2019,1,2,2,2,2)
+
+转化为毫秒的另一种方法：使用+，例如：var start = +new Date()
+Date.now()
+②
+继承的方法
+Date类型也重写了toLocaleString、toString、valueOf方法。具体差异和浏览器有关。而Date类型的valueOf返回的是毫秒数，因而可以直接用Date类型的数据进行大小比较，实则比较的是毫秒数的大小。
+③
+日期格式化方法
+toDateString()
+toTimeString()
+toLocaleDateString()
+toLocalTimeString()
+toUTCString()（等价于toGMTString，gmt是旧版本兼容）
+④
+日期、时间组件方法
+getTime()返回毫秒数，与valueOf()返回的值相同
+setTime(毫秒)
+getFullYear、getUTCFullYear、getMonth、getUTCMonth、getDate、getUTCDate、getDay、getUTCDay、getHours、getUTCHours、setHours、setUTCHours、getMinutes、getUTCMinutes、setMinutes、setUTCMinutes、getSeconds、getUTCSeconds、setSeconds、setUTCSeconds、getMilliseconds、getUTCMilliseconds、setMilliseconds、setUTCMilliseconds、setTimezoneOffset（本地时间与UTC时间相差的分钟数。夏令时？？）
+
+8.3RegExp
