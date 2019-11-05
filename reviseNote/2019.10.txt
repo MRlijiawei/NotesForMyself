@@ -80,3 +80,8 @@ align-self：自身对齐方式，用于覆盖容器（父元素）的align-items属性，默认auto（aut
 正常是用xxx(){}，而如果使用xxx:()=>的es6写法，虽然也可以触发，但是在方法的实现内部获取不到this组件。原因应该是和两种方法定义的区别有关，之前曾读到过一篇文章，大意就是后者会进行预执行之类的操作，在页面没有完成加载时就执行到了这里。
 
 12.backgorund-size:cover 和object-fit:cover
+
+13.box-sizing:border-box
+现象：加了border之后元素换行了，加上该属性OK了。类似转为内边框的意思。
+
+14.
