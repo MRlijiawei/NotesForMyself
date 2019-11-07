@@ -190,3 +190,159 @@ setTime(毫秒)
 getFullYear、getUTCFullYear、getMonth、getUTCMonth、getDate、getUTCDate、getDay、getUTCDay、getHours、getUTCHours、setHours、setUTCHours、getMinutes、getUTCMinutes、setMinutes、setUTCMinutes、getSeconds、getUTCSeconds、setSeconds、setUTCSeconds、getMilliseconds、getUTCMilliseconds、setMilliseconds、setUTCMilliseconds、setTimezoneOffset（本地时间与UTC时间相差的分钟数。夏令时？？）
 
 8.3RegExp
+正则，/pattern/flags或new RegExp（pattern， flags）。flags可多个，可选：g（全局），i（不区分大小写），m（多行模式），如：/.at/gi。
+两种写法的差别：字面量写法始终会共享同一个RegExp实例，而构造函数法创建的每一个都是新实例。（？？）
+①属性
+global，ignoreCase，multiline（分别对应上边的flags的3种），lastIndex（开始搜索的位置下标），source（字符串表示）
+②方法
+exec()返回一个数组，数组本身有input、index等属性
+test()
+此外还有toLocaleString,toString,valueOf方法
+③构造函数属性
+RegExp本身构造了一些属性，如input、lastMatch、lastParen、multiline、leftContext、rightContext。其中有一些浏览器兼容性支持问题。他们等价于$_,$&,$+,$*,$`,$'。此外还有$1-9来存储前9个匹配项
+
+8.4Function
+构造函数法（函数声明），表达式法。
+函数都是一Function类型的对象实例，函数名相当于是指向这个对象的指针。
+两种定义方法的区别：解析器在执行代码的时候，会优先执行函数声明，因而不管函数声明和调用的先后顺序是怎样的都不会出错；而表达式法则是会按顺序执行，因而调用必须在命名的后边才不会出错。
+
+①函数内部属性
+arguments和this。而arguments还有一个callee属性，是一个指向这个函数本身。
+如：function factorical(num) {
+	if (num <=1) {
+		return 1
+	} else {
+		return num * arguments.callee(num - 1)
+		//return num * factorical(num - 1)一般使用上边写法，消除紧密耦合，且在将方法赋值给别的变量时不需要再关心原方法名
+	}
+}
+caller，即调用者，可结合callee使用，如arguments.callee.caller,即函数本身的调用者
+
+②函数属性和方法
+属性：length和prototype
+length表示方法的参数的个数，prototype则是方法的原型
+方法：apply(),call()（bind()）
+以上两个方法用于在特定作用域中调用函数，等于设置函数体内this对象的值（闭包）
+apply有两个参数，一个是作用域，一个是参数数组。例：
+function getMax(num1,num2){
+	return Math.max.apply(this, arguments//或[num1, num2])
+}
+而call的作用和apply相同，只是参数的形式不同，call的参数需要列举出来，以上例子改成call就是
+return Math.max.call(this, num1, num2)
+使用举例：
+window.color = '1'
+var o = {color: '2'}
+function sayColor(){
+	return this.color
+}
+sayColor()//1//sayColor.call(this)、sayColor.call(window)//1
+sayColor.call(o)//2
+此外,ES5新增了bind，用于将this绑定到指定对象。如上边的例子：sayColor.bind(o)()
+bind与前边两者的不同主要是前两者相当于应用了作用域后直接执行，而bind是绑定，相当于返回的是绑定后的方法，要得到结果需要手动执行（括号()）。且bind只有一个有效参数
+
+8.5基本包装类型
+Number，Boolean，String。
+基本数据类型不是对象，理论上不应该有方法，如字符串的substring()方法。有方法的实际原理是
+首先调用new String()创建了一个实例，然后调用substring方法，然后销毁实例。以下例子便于理解：
+var value = '2'
+var num = Number(value)//这里Number是转型函数
+var num1 = new Number(value)//这里Number是构造函数
+alert(typeof num)//number
+alert(typeof num1)//object
+这三种包装类型的toLocaleString、toString、valueOf均被重写，暂不赘述。
+
+此外，Number类型有一些常用方法，如toFixed，toExponential（转为科学计数法），此外还有toPrecision（有一个参数，表示返回的结果的位数，其结果形式由原数据和该位数决定是否是科学计数法以及是否有小数点等）
+String有一些方法和属性：length属性，方法：charAt，charCodeAt。此外，可以使用下标的方式访问第几位的元素，效果同charAt，如var a = ‘123’，a[1]。
+String的操作方法：concat字符串拼接，slice、substring（这两个的参数是起止位置下标），substr（参数是起始位置和长度）
+以上3个截取方法的参数如果有负数，会有不同的表现，有的转化为正数，有的转化为0（？？使用时再分析，不推荐使用）
+String的位置方法indexOf、lastIndexOf，同前，参数有两个，一个是要查找的元素，一个是起始点的下标.
+此外还有trim(),toUpperCase(),toLowerCase(),toLocaleLowerCase(),toLocalUpperCase()
+
+String的查找匹配方法：
+match()方法，实质上和RegExp的exec()方法相同，
+类似的还有search()，类似charAt，而参数和match的相同是正则，
+此外还有replace()，第一个参数是正则，第二个是要替换的字符，也可以是一个函数，有3个参数。
+还有split方法，有两个参数，一个是分割字符，一个是返回数组的长度指定
+最后一个是localeCompare，用以比较两个字符在字母表的排序，括号里的那个参数在前则为1，在后则为-1，相等为0，如：'yello'.localeCompare('red')//1
+
+formCharCode()方法：构造函数本身的静态方法，与charCodeAt相逆。如String.formCharCode(104, 101, 108)//'hel'
+
+此外，还有一些构造html标签的方法，有anchor(name)，big，bld，fixed等等，但不推荐使用
+
+8.6单体内置对象
+Object、Array、String等都是内置对象，此外还有两个单体内置对象Global和Math
+①Global对象
+URI编码：encodeURI和encodeURIComponent，两者的区别是前者不会对某些特殊字符如冒号正斜杠等进行编码，而后者是对url的一部分进行编码因而会全部编码；
+与他们对应的是decodeURI和decodeURIComponent解码。
+
+eval()方法：执行，解析器。参数是js代码段。效果是执行该段代码，等同于直接执行。严格模式不可以
+Global对象的属性，其实就是那些构造函数。
+window对象
+
+②Math对象
+属性：E,LN10,LN2,LOG2E,LOG10E,PI,SQRT1_2,SQRT2
+方法：min(),max()
+	舍入方法：ceil（向上舍入），floor（向下舍入），round（四舍五入）
+	随机方法random()0-1不包括两端的随机数，常用：Math.floor(Math.random * m + n)//m~m+n
+	其他方法：abs,exp,log,pow,sqrt,三角函数等
+
+9.面向对象
+9.1对象属性
+①数据属性
+数据属性的4个特性：[[Configurable]](是否能通过delete删除，是否能修改特性),[[Enumerable]](是否可以for-in)，[[Writable]](是否可写，即是否可以修改属性的值),[[Value]]。
+前3者都默认true，如果要修改这4个特性，需要使用Object.defineProperty()，3个参数，分别是目标对象、属性名字，描述符对象（范围以上4种），如：
+var person = {}
+Object.defineProperty(person, 'name', {
+	writable: false,
+	value: 'static name'
+})
+这样person的name属性就变成只读的，不能修改。此外，如果设置configuration为不可配置的，则再次设置修改该特性会报错。
+
+②访问器属性（在数据属性的基础上有get和set？？）
+[[Configurable]],[[Enumerable]],[[Get]],[[Set]]
+同样，要使用Object.defineProperty()来定义，如：
+var book = {
+	_year: 2018,
+	edition: 1
+}
+Object.defineProperty(book, 'year', {
+	get: function(){ return this._year },
+	set: function(newYear) {
+		if (newYear > 2018) {
+			this._year = newYear
+			this.edition += newYear - 2018
+		}
+	}
+})
+book.year = 2019
+alert(book.edition)//2
+如果不同时指定getter和setter，则没有指定get或set就不能读或写。
+而后有两个非标准方法：__defineGetter__(),__defineSetter__()
+使用这两个方法，上边例子可以改为：
+book.__defineGetter__('year', function(){return this._year})
+set同上
+
+为方便定义多个属性，有Object.defineProperties方法(两个参数)，如：
+var book = {}
+Object.defineProperties(book,{
+	_year: {
+		value: 2018
+	},
+	edition: {
+		value: 1
+	},
+	year: {
+		get: xxx,
+		set: xxx
+	}
+})
+
+③读取属性特性
+Object.getOwnPropertyDescriptor()，参数有两个，一个是对象，一个是要读取的属性，返回的是一个对象，包含以上2种八个属性。可以对任何对象包括BOM、DOM对象进行使用。
+
+9.2创建对象的模式
+①工厂模式，解决创建多个相似对象的问题，但解决不了对象识别。使用函数构造对象（{new Object()...}）
+②构造函数模式，也是一个函数，但是首字母大写，使用时和Object等相同，需要new。而构造的实例化的对象的constructor就是该构造函数({this.xxx=xxx;xxx})。而使用instanceof验证，实例对象即是构造函数的实例，也是Object的实例，构造函数继承自Object。而构造函数也能当做普通函数使用。而由于每个属性和方法都是实例化的，因而占用的内存也是不同的，不同实例对象其内部的方法也是不相等的。优化的写法可以把其内部的方法抽出来单独定义（如this.sayName = sayName,sayName在外部定义）。
+③原型模式(prototype)，类似构造函数模式，且可以实现属性方法共享。如：
+function Person(){}
+Person.prototype.name = '1'//'1'是共享的，都可以访问到的
