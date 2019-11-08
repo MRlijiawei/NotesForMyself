@@ -346,3 +346,38 @@ Object.getOwnPropertyDescriptor()£¬²ÎÊıÓĞÁ½¸ö£¬Ò»¸öÊÇ¶ÔÏó£¬Ò»¸öÊÇÒª¶ÁÈ¡µÄÊôĞÔ£¬·
 ¢ÛÔ­ĞÍÄ£Ê½(prototype)£¬ÀàËÆ¹¹Ôìº¯ÊıÄ£Ê½£¬ÇÒ¿ÉÒÔÊµÏÖÊôĞÔ·½·¨¹²Ïí¡£Èç£º
 function Person(){}
 Person.prototype.name = '1'//'1'ÊÇ¹²ÏíµÄ£¬¶¼¿ÉÒÔ·ÃÎÊµ½µÄ
+isPrototypeof():Object.prototype.isPrototypeOf(Array)//true
+Object.getPrototypeof()
+hasOwnProperty()ºÍinµÄÇø±ğ:
+
+function Person(){age:10}
+var person1 = new Person()
+Person.prototype.name = 'name0'
+person1.name//name0
+person1.hasOwnProperty('name')//false
+person1.hasOwnProperty('age')//true
+'name' in person1//true
+person1.name = 'name1'
+person1.hasOwnProperty('name')//true
+Ò»ÆğÊ¹ÓÃÁ½¸ö·½·¨¿ÉÒÔÈ·¶¨ÊôĞÔÊÇ´æÔÚÓÚ¶ÔÏóÖĞ»¹ÊÇ´æÔÚÓÚÔ­ĞÍÖĞ
+
+Object.keys()£¬²ÎÊıÊÇ¶ÔÏó£¬·µ»ØµÄÊÇ´æÔÚÓÚ¶ÔÏó£¨²»ÊÇÔ­ĞÍ£©ÖĞµÄÊôĞÔµÄ×Ö·û´®
+
+¼ò»¯Ô­ĞÍĞ´·¨£º
+Person.prototype = {
+	age: 10,
+	name: 'name0'
+}µ«ÕâÖÖĞ´·¨new³öÀ´µÄ¶ÔÏóµÄconstructorÊôĞÔ²»ÔÙÊÇÔ­ĞÍ¹¹Ôìº¯Êı£¬instanceof²»±ä¡£Èç¹ûÏëÉè»ØÔ­¹¹Ôìº¯Êı£¬Ôò¿ÉÒÔÔÚÉÏ±ßµÄÔ­ĞÍ¶ÔÏóÖĞÖ±½Ó¼Óconstructor: PersonµÄÊôĞÔ¡£
+¶øÒÔÉÏĞ´·¨»áµ¼ÖÂconstructorµÄenumerableÎªtrueÇÒ²»¿ÉĞŞ¸Ä£¬Èç¹ûÏëÉè³Éfalse£¬Ôò¿ÉÒÔ¸Ä³ÉÊ¹ÓÃES5µÄdefineProperty£º
+Object.defineProperty(Person.prototype, 'constructor', {
+	enumerable: false, value: Person
+})
+Ô­ĞÍÄ£Ê½È±µã£ºÓÉÓÚÊı¾İÊÇ¹²ÏíµÄ£¬Òò¶øĞŞ¸ÄÁËÖ®ºó»áÓ°Ïìµ½±ğµÄÊµÀı¶ÔÏó¡£Êµ¼ÊÊ¹ÓÃÖĞ´ó¶à¶¼ÊÇ½áºÏ¹¹Ôìº¯ÊıÄ£Ê½Ò»ÆğÊ¹ÓÃ¡£
+
+¢Ü¶¯Ì¬Ô­ĞÍÄ£Ê½£¿£¿
+
+¢İ¼ÄÉú¹¹Ôìº¯ÊıÄ£Ê½£¿£¿
+
+¢ŞÎÈÍ×¹¹Ôìº¯ÊıÄ£Ê½£¿£¿
+
+9.3¼Ì³Ğ
