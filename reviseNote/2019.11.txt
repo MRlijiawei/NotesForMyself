@@ -381,3 +381,17 @@ Object.defineProperty(Person.prototype, 'constructor', {
 ⑥稳妥构造函数模式？？
 
 9.3继承
+普通继承有接口继承、实现继承两种，而JS函数没有签名，所以只能实现继承。
+①原型链
+形式：
+function A(){...}
+function B(){...}
+functionB.prototype = new functionA()
+原型链问题：包含引用类型值的时候，由于引用类型值会被所有实例共享，因而在一个实例中改变了之后，另一个实例对应的也会改变。还有就是在创建子类型实例时，不能向超类型的构造函数中传递参数。
+②借用构造函数
+形式:
+function A(){...}
+function B(){
+	functionA.call(this)//或者apply（bind？）
+}
+解决了原型链的上边两个问题
