@@ -1,3 +1,4 @@
+getBoundingClientRect的兼容性：ie edage没有x，y
 1.Number类型
 8进制
 0开头，如var octNum = 070
