@@ -395,4 +395,145 @@ function A(){...}
 function B(){
 	functionA.call(this)//或者apply（bind？）
 }
-解决了原型链的上边两个问题
+解决了原型链的上边两个问题，且可传参。但是仅使用构造函数模式，会使函数复用难以实现。
+
+③组合继承
+使用原型链实现对原型属性和方法的继承，通过借用构造函数实现对实例属性的继承。
+function SuperType(name){
+	this.name = name
+	this.colors = ['1','2','3']
+}
+SuperType.prototype.sayName = function(){
+	alert(this.name)
+}
+function SubType(name, age){
+	SuperType.call(this, name)
+	this.age = age
+}
+SubType.prototype = new SuperType()
+SubType.prototype.sayAge = function(){
+	alert(this.age)
+}
+var instance1 = new SubType('name1', 10)
+
+④原型式继承
+es5新增Object.create()方法，第一个参数是做为新对象的原型的对象，第二个是为新对象定义额外属性的对象，第二个参数形式如Object.defineProperties()的第二个参数。
+
+⑤寄生式继承
+
+⑥寄生组合式继承
+
+10.函数表达式
+函数声明，函数表达式（匿名函数），函数声明提升（特征）
+
+10.1递归
+注意递归时在函数内部，使用arguments.callee来代替函数名更保险，防止函数被释放（=null）时使用函数名找不到函数的引用。
+但严格模式不能通过脚本访问arguments.callee，此时可以使用命名函数表达式来达成效果：
+war factorial = (function f(num) {
+	if (num <=1){
+		return 1
+	} else {
+		return num * f(n-1)
+	}
+})
+
+10.2闭包
+闭包指有权访问另一个函数作用域中的变量的函数。
+创建闭包的常用方式：在一个函数内部创建另外一个函数。
+闭包与变量（局部，作用域）
+
+①闭包与this：
+匿名函数的作用域是全局，因而内部this指向window
+eg：
+var name = 'window'
+var object = {
+	name: 'object',
+	getName: function(){
+		return this.name//object
+		// return function(){return this.name}//window
+		// var that = this;return function (){return that.name}//object
+	}
+}
+object.getName()//object
+(object.getName)()//object
+(object.getName=object.getName)()//window
+
+②内存泄露
+由于IE9-版本对JS对象和COM对象的垃圾回收机制不同，所以在低版本id中，如果闭包的作用域链中保存着html元素，则该元素将无法被销毁。
+解决办法：手动释放（消除引用，置null），eg：
+function assignHandler(){
+	var element = document.getElementById(xxx)
+	var id = element.id//
+	element.onclick = function(){
+		alert(id)//element.id
+	}
+	element = null//
+}
+
+9.3模仿块级作用域
+js没有真正意义的块级作用域，如for循环中的计数变量，在java等语言中循环内部才可以访问到计数器变量，而在js中，与循环同级作用域内（循环语句后边才可以）均能访问到。即使被重新声明（var i;不赋值）也不会改变其值。
+(function(){})()，作用，防止作用域污染全局作用域，防止命名冲突，减少内存占用。
+
+9.4私有变量
+特权方法（有权访问私有变量和私有方法的公有方法）
+如：
+function Person(name){
+	this.getName = function(){return name}
+	this.setName = function(val){name = val}
+}
+function(){
+	var privateViriable = 10
+	function privateFunction(){
+		return false
+	}
+	this.publicMethod = function(){
+		privateViriable++
+		return privateFunction()
+	}
+}
+缺点：因为是使用构造函数模式，因而会有每个实例都会创建同样的一组新的方法的问题，内存占用多。
+①解决：使用静态私有变量，即将其放在私有作用域中：如：
+(function(){
+	var privateViriable = 10
+	function privateFunction(){
+		return false
+	}
+	//构造函数//没有使用var，初始化未经声明的变量，总是会创建一个全局变量
+	MyObject = function(){}
+	MyObject.prototype.publicMethod = function(){
+		privateViriable++
+		return privateFunction()
+	}
+})()
+初始化未经声明的变量，总是会创建一个全局变量（不使用var）
+但是这样又会导致不同的对象他们的属性是共享的问题。
+闭包和私有变量因为会多查找一层作用域链，因而会稍微影响查找速度。
+
+②模块模式
+单例（只有一个实例的对象），即匿名函数直接执行的形式，eg：
+var application = function(){
+	var components = new Array()//私有变量和函数
+	components.push(new BaseComponent())//初始化
+	// 公共
+	return {
+		getComponentCount: function(){
+			return components.length
+		},
+		registerComponent: function(component){
+			if(typeof component == 'object'){
+				components.push(component)
+			}
+		}
+	}
+}()
+
+③增强的模块模式
+即在模块模式return对象之前对对象的方法和属性进行扩展。如上边的例子可以扩展为：
+在初始化之后：
+...（前边省略到初始化的地方）
+var app = new BaseComponent()
+app.getComponent = function...(与上边相同)
+app.registerComponent = function...(与上边相同)
+return app
+}()
+
