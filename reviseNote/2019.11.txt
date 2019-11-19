@@ -1,4 +1,13 @@
-getBoundingClientRect的兼容性：ie edage没有x，y
+getBoundingClientRect的兼容性：ie edage没有x，y;
+
+计算百分比，先÷后取小数点再乘100会导致出现问题
+(1/214).toFixed(4)*100//
+0.47000000000000003
+可先乘以100再其他
+(0/0)//NaN
+(1/0)//
+Infinity
+
 1.Number类型
 8进制
 0开头，如var octNum = 070
