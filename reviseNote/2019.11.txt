@@ -293,7 +293,7 @@ window对象
 属性：E,LN10,LN2,LOG2E,LOG10E,PI,SQRT1_2,SQRT2
 方法：min(),max()
 	舍入方法：ceil（向上舍入），floor（向下舍入），round（四舍五入）
-	随机方法random()0-1不包括两端的随机数，常用：Math.floor(Math.random * m + n)//m~m+n
+	随机方法random()0-1不包括两端的随机数，常用：Math.floor(Math.random() * m + n)//n~m+n
 	其他方法：abs,exp,log,pow,sqrt,三角函数等
 
 9.面向对象
