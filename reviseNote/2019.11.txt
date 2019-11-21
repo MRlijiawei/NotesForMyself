@@ -8,6 +8,11 @@ getBoundingClientRect的兼容性：ie edage没有x，y;
 (1/0)//
 Infinity
 
+vue动态绑定和获取ref
+场景：v-for循环中或者动态组件中
+ref是像dom的id类似的东西，用于在vue中获取指定dom。但是ref可以重复，重复的取到后是一个数组，根据下标取相应的即可。
+另外在页面渲染完之后才有dom，所以一般需要在$nextTick才能取到。
+
 1.Number类型
 8进制
 0开头，如var octNum = 070
