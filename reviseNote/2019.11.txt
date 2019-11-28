@@ -8,6 +8,11 @@ getBoundingClientRect的兼容性：ie edage没有x，y;
 (1/0)//
 Infinity
 
+() => 和function()：
+注册顺序不同？前者较早。在vue中，如果watch的handler使用第一种并在其中调用了组件的method里边的方法，会找不到方法。
+
+Object.assign(target, source)
+
 vue动态绑定和获取ref
 场景：v-for循环中或者动态组件中
 ref是像dom的id类似的东西，用于在vue中获取指定dom。但是ref可以重复，重复的取到后是一个数组，根据下标取相应的即可。
