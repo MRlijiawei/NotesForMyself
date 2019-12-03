@@ -13,6 +13,9 @@ Infinity
 
 Object.assign(target, source)
 
+function($event){event.cancelBubble = true}
+角度和弧度的转换（Math.PI和180的乘除）
+
 vue动态绑定和获取ref
 场景：v-for循环中或者动态组件中
 ref是像dom的id类似的东西，用于在vue中获取指定dom。但是ref可以重复，重复的取到后是一个数组，根据下标取相应的即可。
