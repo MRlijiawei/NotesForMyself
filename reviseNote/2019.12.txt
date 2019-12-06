@@ -24,3 +24,56 @@ var leftPos = (typeof window.screenLeft == 'number') ? window.screenLeft : windo
 
 ④窗口大小
 innerWidth，innerHeight，outerWidth，outerHeight。不同浏览器有所不同
+
+resizeTo(),resizeBy()
+
+⑤导航和打开窗口
+window.open(url,target,特性字符串,新页面是否取代历史记录中的当前页面)
+如，<a href="xxx" target="aaa">则，会找到一个name叫aaa的窗口或框架来打开页面，如果没有则新建并命名为aaa，此外，第二个参数还可以是一些特殊的，如_self,_parent,_top,_blank.
+第三个参数是对窗口进行尺寸等设置的字符串，逗号分隔，如"height=400,width=500,top=10,left=10,resize=true"
+
+close(),closed
+
+opener
+将其置为null则表示该页面在单独的进程中运行，不需要通信，也无法再恢复
+安全限制，弹窗屏蔽程序。
+如果被屏蔽，则window.open()就会返回null
+var flag = false
+try {
+	var newWin = window.open(...)
+	if(newWin == null) {
+		flag = true
+	}
+} catch (ex) {
+	flag = true
+}
+if (flag) {
+	alert('Popup was blocked')
+}
+
+⑥间歇调用，超时调用
+setInterval，setTimeout，clearInterval，clearTimeout()
+
+⑦系统对话框
+alert(),confirm(),prompt()
+这几个方法是同步和模态的，也就是打开的时候代码会停止执行，关闭后继续执行。
+if (confirm('OK?')) {
+	alert('OK')//点击确定
+} else {
+	alert('NO')//点击取消或X
+}
+prompt会在确定取消按钮之外显示一个文本框，参数是提示值和输入框里的默认值
+点击确定后，会返回输入框里的值，取消或关闭，会返回null
+
+window.print()打印对话框，window.find()查找对话框
+
+1.2location对象
+window.location和document.location指向同一个对象
+属性：
+hash（#后的字符），host（域名+端口号（若有）），hostName(域名），href（URL，toString(）方法也返回该URL)，pathname(URL中的目录和/或文件名)，port，protocol（协议，http:或https:），search（查询字符串，问号开头。可封装获取参数的方法）
+location.assign(URL)??
+以上属性直接修改之后都会在浏览器的历史记录中生成一条记录，即可用返回修改前的url的页面。如果想要不能返回，可用使用location.replace(URL)
+此外，location.reload()，参数可以是true（从服务器重新加载），如果不带参数，则可能从缓存加载
+
+1.3navigator对象
+属性：appCodeName（一般是Mozilla），appMinorVersion（次版本信息），appName（完整名称），appVersion，buildID（编译版本），cookieEnabled，cpuClass，javaEnabled()，language，mimeTypes，onLine（是否连接到因特网），opsProfile，oscpu，platform（系统平台），plugins，preference()（用户首选项设置）
