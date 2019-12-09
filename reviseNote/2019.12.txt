@@ -1,3 +1,6 @@
+控制台输出带颜色字体：console.log('aa%caa', 'color:red')，%c表示颜色。实测一条语句仅第一个%c有效
+
+
 1.BOM
 1.1window对象
 ①全局作用域
@@ -76,4 +79,172 @@ location.assign(URL)??
 此外，location.reload()，参数可以是true（从服务器重新加载），如果不带参数，则可能从缓存加载
 
 1.3navigator对象
-属性：appCodeName（一般是Mozilla），appMinorVersion（次版本信息），appName（完整名称），appVersion，buildID（编译版本），cookieEnabled，cpuClass，javaEnabled()，language，mimeTypes，onLine（是否连接到因特网），opsProfile，oscpu，platform（系统平台），plugins，preference()（用户首选项设置）
+属性：appCodeName（一般是Mozilla），appMinorVersion（次版本信息），appName（完整名称），appVersion，buildID（编译版本），cookieEnabled，cpuClass，javaEnabled()，language，mimeTypes，onLine（是否连接到因特网），opsProfile，oscpu，platform（系统平台），plugins，preference()（用户首选项设置），product（产品名称），productSub（产品次要信息），registerContentHandler()（针对特定MIME类型将一根站点注册为处理程序），registerProtocolHandler()（针对特定协议将一根站点注册为处理程序），securityPolicy（已废弃），systemLanguage，taintEnabled()（已废弃），userAgent（浏览器的用户代理字符串），userLanguage（操作系统的默认语言），userProfile（借以访问用户个人信息的对象），vendor（品牌），venderSub。
+
+①检测插件（plugins）
+一般浏览器遍历plugins数组即可完成检测，而一些低版本IE不支持Netscape式的插件而是以COM对象的方式实现插件的，因而要使用专有的ActiveXObject类型来尝试创建特定插件示例，且必须要知道其COM标识符。
+function hasIEPlugin(name) {
+	try{
+		new ActiveXObject(name)
+		return true
+	} catch(ex) {
+		return false
+	}
+}
+plugins集合有一个refresh()方法，参数是是否刷新页面的布尔值
+
+②注册处理程序
+Firefox2为navigator新增了registerContentHandler(MIME类型，url，程序名称)和registerProtocolHandler(协议（如mailto，ftp），url，程序名)，可以让一个站点指明它可以处理特定类型的信息。
+如：
+将一个站点注册为处理RSS源的处理程序(%s表示RSS源URL)：
+navigator.registerContentHandler('application/rss+xml','http://xxx?feed=%s','some reader')
+将一个应用程序注册为默认邮件客户端(%s表示原始请求)：
+navigator.registerProtocolHandler('mailto','http://www.xxx','some mail cliend')
+
+1.4screen对象
+属性：height，width，availWidth，availHeight等，有一定的浏览器支持的兼容性。
+使用，如：window.resizeTo(screen.availWidth, screen.availHeight)。许多浏览器会禁用调整浏览器窗口大小的能力，因为需要注意一下兼容性。
+
+1.5history对象
+go()方法，负数表示后退步数，正数表示前进。也可以传一个字符串，此时会调整到前后历史记录中包含该字符串的第一个位置（最近的位置），如果没有，则不处理。
+back(),forward()方法，后退前进。
+history的length属性，可用于确定是否是打开窗口的第一个页面（length==0）。结合前边，修改url的一些内容如hash，会生成新的历史记录。
+
+2 客户端检测
+2.1能力检测
+if(object.propertyInQuestion) {
+},例：
+function getElement(id){
+	if (document.getElementById) {
+		return document.getElementById(id)
+	} else if (document.all) {
+		return document.all[id]
+	} else {
+		throw new Error('xxx')
+	}
+}
+
+此外，!!,typeof也常有于能力检测，且多结合使用。
+function isHostMethod(object, property) {
+	var t = typeof object[property]
+	return t == 'function' || (!!(t == 'object' && object[property])) || t == 'unknown'//IE中xhr.open返回unknown
+}
+浏览器检测？
+
+2.2怪癖检测
+如IE8[[DontEnum]]的属性？
+
+2.3用户代理检测
+利用代理检测客户端精确信息和版本
+
+
+3 DOM
+3.1节点层次
+3.1.1①Node类型
+每个节点都有一个nodeType属性，其值是12个数值常量之一，如Node.ELEMENT_NODE//1
+兼容性：IE没有公开Node类型的构造函数，因而不能直接使用常量来对比判断，而应该直接使用常量对应的数值
+
+除了nodeType外，节点还有nodeName和nodeValue两个常用属性，还有childNodes属性，childNodes是一个类似数组的结构，但不是Array实例，且是基于DOM结构动态执行查询的结果，因而是可以动态刷新的。有length属性，且可以使用xxx.childNodes[index]或xxx.childNodes.item(index)来访问。
+
+在IE8以后的版本（9+），可以将NodeList转换为数组，IE8及以前版本是将NodeList实现为COM对象。
+function convertToArray(nodes) {
+	var array = null
+	try{
+		array = Array.prototype.slice.call(nodes, 0)//非IE
+	} catch(ex) {
+		array = new Array()
+		for (var i=0,len = nodes.length;i<len;i++) {
+			array.push(nodes[i])
+		}
+	}
+	return array
+}
+
+②节点关系（父子兄弟）
+此外，每个节点也都有parentNode属性，而兄弟节点之间可以通过nextSibling和previousSibling访问，第一个节点的pre...为null，最后一个节点的next...为null。父节点的firstChild和lastChild分别执行子节点的第一个和最后一个节点。检测有无子节点，除了判断childNodes是否为空为null、判断长度外，可以之间使用hasChildNodes()方法。还有ownerDocument属性，执行表示整个文档的节点（当前dom的最外层）
+
+③节点操作
+appendChild()，向目标节点的childNodes的末尾插入节点，返回新增的节点。一个节点不能同时出现在两个地方，因而如果参数节点是已经存在的，则会从原位置移动到目标位置。一个小技巧，有多个子节点时，可以通过appendChild将目标子节点调整成lastChild。
+
+insertBefore()，如果不放在末尾，可以使用该方法。与前边的方法类似，返回新节点，但是参数有要插入的节点和参照节点两个，执行后插入的节点成为参照节点的前一个兄弟节点（previousSibling）。如果第二个参数为null，则等效于appendChild()
+
+replaceChild()参数是要插入替换的节点和被替换移除掉的节点，返回被移除的节点。
+
+removeChild()参数是要移除的节点，返回该节点。
+
+并不是全部类型的节点都有子节点。
+
+④其他
+cloneNode()，参数是一个布尔值，表示是否深复制（深复制会复制其整改子节点数，浅复制只复制本身节点（子节点为null））。不会复制事件，但IE有会复制事件的bug，最好在复制之前移除事件。
+
+normalize(),处理文本节点，将空的文本节点移除，将相邻的文本节点合并。
+以上两个方法所有类型的节点都支持。
+
+3.1.2Document类型
+①文档子节点
+JS通过document类型表示文档，js里document对象是HTMLDocument的一个实例，继承自Document类型，表示整个HTML页面，且是window对象的一个属性。
+节点类型nodeType是9，像一个普通节点一样拥有nodeName等其他属性。
+其子节点可以是DocumentType、Element、ProcessingInstructior、Comment。但还可以通过childNodes来访问文档元素，或通过documentElement属性访问（一般使用这个，指向<html>元素）。可以直接用过body属性来访问body标签，同理还有head等。
+document.doctype//对<!DOCTYPE>的引用。不同浏览器对该属性的支持差别很大。类似的对注释的处理也差异很大。
+
+②文档信息
+一些特殊属性：title（指向<title>节点），URL，domain（域名），referrer（链接到当前页面的那个页面的URL）。其中domain和title是可以设置的。但安全限制不允许修改domain，因而只能设置为url中包含的域名（可以子域名二级域名），可以通过这样修改来解决跨域问题，但修改是不可逆的。如：
+document.domain = b.com//原url：a.b.com。但设置了之后想再设置回去，则会抛出异常。即可以由紧致设置为松散，但不能由松散设置为紧致（始于IE8）。
+
+③查找元素
+getElement(s)Byxxxxxx（id，name，tagName等），如果是HTMLCollection对象的结果（类似数组），则有namedItem()方法，参数是name，且可以直接通过name来访问，如var el = document.getElementsByTagName('img')['myImg']//等效于xxxx(前边的内容)('img').namedItem('myImg')。
+如果tagname参数是"*"，则返回页面中的所有元素。
+
+④特殊元素
+document.anchors（所有带name属性的<a>）
+	.applets（所有applet元素）
+	.forms....
+	.images...
+	.links（所有带href特性的<a>）
+
+⑤DOM一致性检测
+document.implementation
+有hasFeature()方法，参数是功能名称和版本号，可配合前边的兼容性检测一起使用
+
+⑥文档写入
+write(),writeln()（会换行）,open(),close()
+如document.write('<script>xxxxx' + '<\/script>')// 注意\/
+如果在页面加载过程中write，会直接向页面输入，如果在页面加载完后write，则会重写整个页面。（严格模式不支持文档写入）open和close用于打开和关闭页面的输出流。
+
+3.1.3Element 类型
+nodeType为1，nodeName为元素标签名（不同浏览器的大小写可能不同）。
+①HTML元素
+特性：id，title，lang（语言），dir（方向，值为ltr（left-to-right）或rtl）,className
+
+②取得特性
+getAttribute()（一般直接获取特性，获取自定义特性时才用）,setAttribute(),removeAttribute()。
+自定义特性，即不在标准特性中的特性，H5规范要求自定义特性前边加上data-，特性名称不区分大小写。以上方法对自定义特性也有效。
+
+③attributes属性
+与NodeList类型，attributes属性中包含一个NamedNodeMap。包含的方法：
+getNamedItem(name),removeNamedItem(name),setNamedItem(node(添加节点)),item(pos下标)。
+每个特性节点有specified属性，表示是否是指定的或已通过setAttribute添加的。
+
+④创建元素
+使用document.createElement(标签名HTML中不区分大小写)，参数也可以是完整的元素的字符串，但是这样会有一些局限性。
+
+3.1.4Text类型（nodeType 3,nodeName '#text',nodeValue或data都是节点包含的文本,不支持子节点，有length）
+appendData()将文本内容添加到节点末尾，
+deleteData(起点下标，要删除的长度)，
+insertData（位置下标，要插入的内容），
+replaceData（起点位置下标，要替换的长度，被替换成的文本）
+splitText(要分割的下标位置)
+substringData(起点下标，长度)
+
+修改节点内容时，到呈现到页面上会被根据文档类型编码
+
+<div></div>//没有文本节点
+<div> </div>//直接是一个空格就相当于是一个文本节点
+
+创建文本节点：createTextNode()
+规范化文本节点：normalize()（在父节点上执行）
+分割。。。：splitText()
+
+3.1.5 Comment类型（nodeType 8,nodeName '#comment'，nodeValue或data是注释内容，没有子节点）
+与Text类型继承自相同的基类，拥有和Text类型除splitText()方法外的全部方法
+createComment()
