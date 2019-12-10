@@ -248,3 +248,294 @@ substringData(起点下标，长度)
 3.1.5 Comment类型（nodeType 8,nodeName '#comment'，nodeValue或data是注释内容，没有子节点）
 与Text类型继承自相同的基类，拥有和Text类型除splitText()方法外的全部方法
 createComment()
+
+3.1.6 CDATASection类型（基于XML，与comment类似）
+
+3.1.7 DocumentType类型（支持性有限）
+
+3.1.8 DocumentFragement类型（文档片段，一般用于循环插入页面时作为中转避免多次渲染，有create方法）
+
+3.1.9 Attr类型（name-名称，value-值，specified-默认或指定的）
+var attr = document.createAttribute('align')
+attr.value = 'left'
+element.setAttributeNode(attr)
+alert(element.attributes['align'].value)//left
+alert(element.getAttributeNode('align').value)//left
+alert(element.getAttribute('align'))//left
+
+3.2 DOM操作
+3.2.1动态脚本，动态样式
+在需要时加载js，即在js里向页面appendChild指定js或js片段。不会立即下载？？（不会影响前边的？但是加载后后边可以直接使用）
+function loadScript(url) {
+	var script = document.createElement('script')
+	script.type = 'text/javascript'
+	script.src = url
+	document.body.appendChild(script)
+}
+// 判断是否加载完成？
+
+function loadScriptString(code) {
+	var script = document.createElement('script')
+	script.type = 'text/javascript'
+	try {
+		script.appendChild(document.createTextNode(code))
+	} catch (ex) {
+		script.text = code//兼容IE
+	}
+	document.body.appendChild(script)
+}
+
+function loadStyles(url) {
+	var link = document.createElement('link')
+	link.rel = 'stylesheet'
+	link.type = 'text/css'
+	link.href = url
+	document.getElementsByTagName('head')[0].appendChild(link)
+}
+// css是异步加载的，不需要关系什么时候加载完成的问题
+function loadStyleString(css) {
+	var style = document.createElement('style')
+	style.type = 'text/css'
+	try {
+		style.appendChild(document.createTextNode(css))
+	} catch (ex) {
+		style.styleSheet.cssText = css// 兼容IE。另外，ie中重复设置一个style的属性或设置为空时容易崩溃
+	}
+	document.getElementsByTagName('head')[0].appendChild(style)
+}
+
+3.2.2 表格
+<table>属性和方法：
+caption：对<caption>元素的指针
+tBodies：<tbody>元素的HTMLCollection
+tFoot：对<tfoot>元素的指针
+tHead：同上
+rows：所有行的HTMLCollection
+createTHead()/createTFoot()/createCaption()/insertRow(下标)
+deleteTHead()/deleteTFoot()/deleteCaption()/deleteRow(下标)
+<tr>元素属性方法：
+cells：<tr>元素中单元格的HTMLCollection
+deleteCell(index)/insertCell(index)
+
+3.2.3 使用NodeList
+NodeList，NamedNodeMap，HTMLCollection：
+都是动态的。应尽量减少访问次数，因为每次访问NodeList，都会运行一次基于文档的查询，所以可以将从NodeList中取的的值缓存起来使用来避免多次查询。
+
+4 DOM扩展
+4.1 选择符API
+如jQuery中的选择器等。Selectors API（W#C发起制定的一个标准） Level 1的核心方法：
+querySelector()和querySelectorAll()（与前者差异：返回的是一个NodeList实例而不是具体的元素）
+同样，访问这个NodeList集中的某一项的时候可以使用.item(i)或[i]
+
+matchedSelector(),避免兼容性问题（ie里是msMatchedSelector(),谷歌是webkitMat...,火狐是mozM...）
+使用：if (document.body.matchesSelector('body .page1'))
+// 兼容性封装
+function matchesSelector(ele, selector) {
+	if (ele.matchesSelector) {
+		return ele.matchesSelector(selector)
+	} else if (ele.msMatchesSelector) {
+		return ele.msMatchesSelector(selector)
+	} else if (ele.mozMatchesSelector) {
+		return ele.mozMatchesSelector(selector)
+	} else if (ele.webkitMatchesSelector) {
+		return ele.webkitMatchesSelector(selector)
+	} else {
+		throw new Error('xxx')
+	}
+}
+使用：if(matchesSelector(document.body, 'body .page1'))
+
+4.2 元素遍历
+为避免不同版本对空格是否返回文本节点的兼容性问题，w3c定义了一组新的属性：
+childElementCount：不包括文本和注释的子元素个数
+firstElementChild：指向第一个元素，firstChild的元素版
+lastElementChild：.../previousElementSibling:.../nextElementSibling:...
+
+4.3 H5（这里只介绍DOM方面的扩展）
+① 与类相关的扩充：
+getElementsByClassName()（document或节点上都可以使用）；
+classList属性（DOMTokenList的实例）：与前边的集合类型类似，可以使用item(i)或[i]访问内部元素，且有add(),contains(),remove(),toggle()方法，用以对class样式进行直接增删改和判断等，解决了改className时需要拆分合并的效率问题。
+
+②焦点管理
+document.activeElement，引用DOM中当前获得了焦点的元素（获得焦点的方式：页面加载，用户输入，focus()方法）
+document.hasFocus()方法判断是否获得了焦点，以确认是否在与页面交互（如切换到别的页面时当前页面的视频播放停止）
+
+③HTMLDocument的变化
+readyState属性（loading、complete），兼容模式compatMode（CSS1Compat（标准模式），BackCompat（混杂模式）），head属性
+
+④字符集属性
+charset，默认是UTF-16，可以通过meta、响应头部或直接设置来修改
+defaultCharset，默认字符集设置
+
+⑤自定义数据属性
+data-属性名
+添加了自定义属性后，可以通过元素的dataset属性（DOMStringMap实例）来访问自定义属性的值
+
+⑥插入标记
+innerHTML属性，可以读取或修改内部内容。有一些元素不支持该属性
+但在写入script的时候有一定的兼容性。script是无作用域的元素，可以通过添加时一起添加有作用域的空元素或设置defer属性来解决。如：
+div.innerHTML = '_<style xxx>xxx</style>'
+div.removeChild(div.firstChild)
+
+outerHTML属性
+与前者的差异在于outer是包括元素本身的节点数，而inner是元素的子节点
+
+insertAdjacentHTML()方法
+参数：插入位置和HTML文本
+位置：‘beforebegin’作为前一个兄弟节点插入
+‘afterbegin’作为第一个子元素插入
+‘beforeend’作为最后一个子元素插入
+‘afterend’作为后一个兄弟节点插入
+
+内存和性能：
+删除带事件处理的节点时，不会一并删除绑定的事件和js对象属性；
+但是由于设置innerHTML和outerHTML属性时会创建浏览器级别的HTML解析器，效率会比js快很多；
+但是要避免过多创建解析器，比如for循环中尽量不要新建。
+
+⑦scrollIntoView()方法
+参数如果是true或不传，则滚动后顶部对齐；如果传false，则尽可能出现在视口，如果可以呈现完，则底部对齐。
+
+
+4.4专有扩展
+①文档模式（meta）
+②children属性
+③contains()方法
+DOM Level3的compareDocumentPosition()也能确认节点关系，返回结果根据节点关系有不同的结果
+④插入文本
+innerText，outerText。firefox不支持innerText，但支持textContent
+⑤滚动
+scrollIntoViewIfNeeded(alignCenter)，若在视口中则不处理，参数表示是否垂直居中；
+scrollByLines(lineCount)将元素内容滚动指定行高
+scrollByPages(pageCount)滚动指定的页面高度
+后两者是元素自身，前两者是容器。
+
+
+5 DOM2和DOM3
+document.implementation
+5.1 DOM变化
+
+5.2 样式
+5.2.1 访问元素的样式
+css中样式属性是下划线，js里是style属性的对应驼峰属性
+
+①DOM样式属性和方法
+style对象的一些属性和方法：
+cssText，length，parentRule（CSSRule对象）,getPropertyCSSValue(propertyName)，getPropertyPriority(propertyName)（如果设置了!important则返回important否则返回空）,getPropertyValue(propertyName)，item(index)（等同于[index]）,removeProperty(propertyName),setProperty(propertyName, value, priority)
+
+getPropertyCSSValue()返回的是一个对象
+
+② 计算的样式
+DOM2级样式增强了document.defaultView，提供了getComputedStyle()方法，参数是元素和伪元素如‘:after’，第二个可以是null；而这个方法在IE中不支持，ie可以使用currentStyle属性代替。
+
+5.2.2 操作样式表
+CSSStyleSheet，继承自StyleSheet。继承的属性：
+disabled，href，media（支持的媒体类型的集合），ownerNode（ie不支持），parentStyleSheet，title，type，（除了disabled，其他都是只读），cssRules（ie为rules），ownerRule，deleteRule(index)（ie是removeRule()）,insertRule(rule,index)（ie是addRule()）
+
+document.styleSheets，item(index)或[index]来访问；
+DOM的则是sheet属性，在ie中是styleSheet属性。如：
+var link = document.getElementsByTagName('link')[0]
+var sheet = link.sheet || link.styleSheet
+
+①CSS规则
+CSSRule对象表示样式表中的每一条规则，是一个供其他多种类型继承的基类，最常见的就是CSSStyleRule类型（其他有@import,@font-face等），CSSStyleRule属性如下：
+cssText，parentRule，parentStyleSheet，type，selectorText，style（除了最后两个，剩下的IE都不支持）
+
+关系示例：
+var sheet = document.styleSheets[0]
+var rules = sheet.cssRules || sheet.rules
+var rule = rules[0]
+alert(rule.selectorText)//如div.box
+console.log(rule.style)// 如width，height
+
+②创建规则
+insertRule(样式文本，插入位置下标)，ie中是addRule，不过参数不同，将样式文本分成了前两个参数
+如：
+sheet.insertRule('body{height:100px}',0)
+sheet.addRule('body','height:100px',0)//ie
+
+function insertRule(sheet, selectorText, cssText, position) {
+	if(sheet.insertRule){
+		sheet.insertRule(selectorText+'{'+cssText+'}',position)
+	} else if (sheet.addRule) {
+		sheet.addRule(selectorText, cssText, position)
+	}
+}
+
+③删除样式
+deleteRule(),ie是removeRule()
+
+5.2.3元素大小
+①偏移量
+offsetHeight，offsetWidth，offsetLeft，offsetTop。offsetParent是父元素的偏移量，通过循环累积，可以取得元素相对浏览器的偏移量。只读
+
+②客户区大小
+clientWidth，clientHeight。内容加上边距。不同模式（混杂模式等）的body的客户区大小获取方法有所不同。只读
+
+③滚动大小
+scrollHeight/Width/Left/Top，document的在document.documentElement上。与客户区的关系不同浏览器有所不同。文档的总高度是滚动大小和客户区大小的最大值。
+
+④确定元素大小。
+getBoundingClientRect(),返回的是一个矩形对象，包含left，top，right，bottom。IE8及更早的版本是以（2,2）为原点的。可封装为兼容的方法。
+
+5.3遍历
+两个用于辅助完成顺序遍历DOM结构的类型：NodeIterator，TreeWalker，基于给定起点对DOM进行深度优先的遍历。IE不支持DOM遍历。
+NodeInterator，使用document.createNodeInterator()创建实例，参数：
+root，作为起点的节点
+whatToShow，表示要访问哪些节点的数字代码（可选值以常量的形式在NodeFilter类型中定义，可使用按位或'|'来组合多个选项）
+filter，一个NodeFilter对象，或一个表示应该接受还是拒绝某种特定节点的函数
+entityReferenceExpansion，表示是否要扩展实体引用的布尔值，在HTML页面中没有用，因为其中的实体不能扩展。
+var filter = {
+	// 必须要有一个acceptNode,或者filter也可以直接是这一个方法
+	acceptNode: function(node){
+		return node.tagName.toLowerCase() == 'p'?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP
+	}
+}
+遍历得到的结果又nextNode()和previousNode()两个方法。
+
+TreeWalker
+是NodeInterator的一个更高级版本，除包含nextNode和previousNode两个外还有更多的方法：
+parentNode(),firstChild(),lastChild(),nextSibling(),previousSibling()，currentNode属性（读写，修改可实现修改起点）
+创建方法是document.createTreeWalker(),参数与前者相同。
+在filter上稍有不同，区别在于不满足时的处理，且有FILTER_REJECT常量。
+
+5.4 范围
+5.4.1 DOM中的范围
+document.createRange()方法
+属性方法：
+startContainer：包含范围起点的节点（选区中第一个节点的父节点）
+startOffset：startContainer中起点的偏移量
+endContainer：。。。（选区中最后一个节点的父节点）
+endOffset：。。。
+commonAncestorContainer：startContainer和endContainer共同的祖先节点在文档树中位置最深的那个
+
+①用DOM范围来实现简单选择
+选择文档中的一部分最简单是selectNode()或selectNodeContents(),参数是一个DOM节点。两者区别是后者只选取子节点，前者选取包括节点本身
+如：
+var range = document.createRange()
+range.selectNode(document.getElementById('xxx'))
+精细选取：
+setStart/EndBefore/After(refNode)4个方法
+
+②用DOM范围实现复杂选择
+使用setStart()和setEnd()，参数是一个参照节点和一个偏移量。如此其范围的属性会相应的被修改为设置的参数。
+
+③操作DOM范围中的内容。
+如，range.deleteContends(),extractContents()。两个方法都会移除选取范围里的元素，差别在于后者返回被移除的片段，可以使用该返回值来达到插入别的地方的功能（就像剪切粘贴）。
+此外还有cloneContents()方法
+
+④插入DOM范围中的内容
+insertNode()，向范围选区的开始处插入一个节点
+
+⑤折叠DOM范围
+collapse(),参数true表示折叠到起点，false表示到终点
+
+⑥比较DOM范围
+compareBoundaryPoints()，比较是否公共边界（起点终点）,参数是两个，一个是起点终点（Range.START/END_TO_END/START），一个是用来比较的范围2。结果：相同返回0，在前返回-1，在后返回1
+
+⑦复制DOM范围
+cloneRange()
+
+⑧清理DOM范围
+使用完后调用detach()来清理以达到内存回收。
+
+在IE8之前范围有所不同，功能点基本一致，主要是对应的方法属性名字不同，如果要兼容需要特殊关照处理。
