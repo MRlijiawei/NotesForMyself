@@ -1,5 +1,11 @@
 控制台输出带颜色字体：console.log('aa%caa', 'color:red')，%c表示颜色。实测一条语句仅第一个%c有效
 
+使用Image对象实现预加载（会预下载图片资源，但不会直接显示到页面上，以便于在需要时可以直接取缓存显示）
+var img = new Image()
+img.src = 'xxx'
+
+String.fromCharCode(charcode)
+
 
 1.BOM
 1.1window对象
@@ -539,3 +545,325 @@ cloneRange()
 使用完后调用detach()来清理以达到内存回收。
 
 在IE8之前范围有所不同，功能点基本一致，主要是对应的方法属性名字不同，如果要兼容需要特殊关照处理。
+
+
+6 事件
+
+6.1事件流
+6.1.1 事件冒泡（由内到外）
+6.1.2 事件捕获（由外到内）
+6.1.3 DOM事件流
+事件捕获阶段，处于目标阶段，事件冒泡阶段。
+
+6.2 事件处理程序
+①HTML事件处理程序（onclick等）
+（事件中this指向事件对象）
+<input type='text' name="username"><input type='button' onclick='alert(username.value)'>
+
+②DOM0级事件处理程序
+document.getElementById('xxx').onclick=function(){xxx}
+（事件中this指向当前元素）
+置为null表示删除
+
+③DOM2级事件处理程序
+addEventListener(),removeEventListener()，参数：要处理的事件名，作为事件处理的函数，布尔值（true表示在捕获阶段调用事件处理程序，false表示在冒泡阶段调用事件处理程序）
+document.getElementById('xxx').addEventListener('click',function(){},false),可以绑定多个事件，会按顺序执行。即该方式可以给一个元素绑定两个click事件且都会执行。
+移除方法的参数与添加的方法相同，移除时必须指定事件名，比如，上边通过匿名函数添加的事件，则无法移除。
+
+④IE事件处理程序
+attachEvent()和detachEvent(),功能和参数与③中的前两个相同，但稍有不同，比如，3中是click，这里则需要onclick。this指向window，且添加多个同动作的事件时，指向顺序与3相反，后定义的先执行。
+
+⑤跨浏览器的事件处理程序
+var EventUtil = {
+	addHandler: function(ele, type, handler) {
+		if (ele.addEventListener) {
+			ele.addEventListener(type, handler, false)
+		} else if (ele.attachEvent) {
+			element.attachEvent('on'+type, handler)
+		} else {
+			element['on'+type] = handler
+		}
+	},
+	removeHandler: function(ele, type, handler) {
+		if (ele.removeEventListener) {
+			ele.removeEventListener(type, handler, false)
+		} else if (ele.detachEvent) {
+			element.detachEvent('on'+type, handler)
+		} else {
+			element['on'+type] = null
+		}
+	}
+}
+
+6.3 事件对象event
+属性（一些基本属性都是只读的）：
+bubbles：事件是否冒泡
+cancelable：是否可以取消事件的默认行为
+currentTarget
+defaultPrevented：true表示已经调用了preventDefault()（DOM3级事件中新增）
+detail
+eventPhase：即前边说的3个阶段，分别用1,2,3表示
+preventDefault()：取消事件的默认行为，cancelable 为true可以使用
+stopImmediatePropagation()：取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用
+stopPropagation()：取消事件的进一步捕获或冒泡，bubbles为true可以使用
+target
+trusted：true表示浏览器生成，false表示js创建
+type，view（等同于发生事件的window）
+在事件处理程序内部this指向currentTarget，而target是实际目标。
+
+IE上：event是window的属性，尤其是在DOM0及，只能通过window.event获取
+属性和方法：
+cancelBubble：默认false，设置为true就可以取消冒泡
+returnValue：默认为true，设置为false就可以取消默认行为
+srcElement：等同于前边的target
+type
+
+跨浏览器的事件对象：
+在前边EventUtil的基础上，新增：
+getEvent: function(event) {
+	return event ? event : window.event
+},
+	// 下边三个event入参是上边getEvent获取到的event
+getTarget: function(event) {
+	return event.target || event.srcElement
+},
+preventDefault: function(event) {
+	if (event.preventDefault) {
+		event.preventDefault()
+	} else {
+		event.returnValue = false
+	}
+},
+stopPropagation: function(event) {
+	if (event.stopPropagation) {
+		event.stopPrppagation()
+	} else {
+		event.cancelBubble = true
+	}
+}
+
+6.4 事件类型
+UI事件，焦点事件，鼠标事件，滚动事件，文本事件，键盘事件，合成事件（输入法编辑器输入字符时触发），变动事件（底层DOM结构变化时触发），变动名称事件（元素或属性名变动时触发，已废弃）
+以上是常规事件
+
+①UI事件：
+DomActivate（废弃），load，unload（多用于清除引用，以避免内存泄露），abort（中途停止），error，select（文本），resize，scroll
+
+②焦点事件：
+bulr，DOMFocusIn（废弃，改为focusin），DOMFocusOut（废弃，改为focusout），
+focus，focusin，focusout
+
+③鼠标，滚轮
+click，dbclick，mousedown，mouseenter，mouseleave，mousemove，mouseout，mouseup（顺序：
+mousedown-》mouseuo-》click-》mousedown-》mouseup-》click-》dbclick），mousewheel（滚轮）
+
+event对象的clientX/Y,pageX/Y（无滚动时两种相同），两者的差就是页面的scrollLeft和Top，screenX/Y（相对于屏幕的位置）
+
+修改键：即shift，ctrl，alt，meta等组合键，对应的在event对象中有shiftKey,ctrlKey,altKey,metaKey表示是否按下相应的键。
+
+相关元素：对于mouseover，mouseout等这种涉及到两个对象切换的事件，event对象有relatedTarget表示相关元素。（从相关元素移入和移出到相关元素）IE8以前有一些兼容性问题：
+getRelatedTarget: function(event) {
+		if (event.relatedTarget) {
+			return event.relatedTarget
+		} else if (event.toElement) {
+			return event.toElement
+		} else if (event.fromElement) {
+			return event.fromElement
+		} else {
+			return null
+		}
+	}
+
+区分按下的是哪个键：
+event的dom的button属性，0,1,2
+getButton: function(event) {
+		if (document.implementation.hasFeature('MouseEvents', '2.0')) {
+			return event.button
+		} else {
+			switch (event.button) {
+				case 0:
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+					return 0
+				case 2:
+				case 6:
+					return 2
+				case 4:
+					return 1
+			}
+		}
+	}
+
+滚轮滚动：（firefox是DOMMouseScroll）
+getWheelDelta: function(event) {
+		if (event.wheelDelta) {
+			return (client.engine.opera && client.engine.opera < 9.5 ? -event.wheelDelta : event.wheelDelta)
+		} else {
+			return -event.detail * 40
+		}
+	}
+
+触摸设备（移动端）：无双击，等差别
+屏幕阅读器（无障碍性问题）：不使用 mousedown，mouseover，dbclick
+
+④ 键盘与文本事件：
+keydown，keypress，（以上两个按住不放会重复触发）keyup，textInput。
+也有shift、ctrlKey等，ie没有metaKey
+
+键码keyCode
+
+字符编码
+charCode
+data
+
+char，key，location，getModifierState()，inputMethod（输入、复制、拖放等），只有IE9+支持
+
+⑤复合事件（IME输入法编辑器，DOM3）
+compositionstart,compositionupdate,compositionend
+
+⑥变动事件（MutationEvents，DOM2）
+DOMSubtreeModified，DOMNodeInserted，DOMNodeRemoved，DOMNodeInsertedIntoDocument，DOMNodeRemovedFromDocument，DOMAttrModified，DOMCharacterDataModified
+
+⑦H5事件
+一些比较完善支持的事件:
+contextmenu,beforeunload（event.returnValue = 'xxx';return 'xxx'）,DOMContentLoaded,readystatechange,pageshow,pagehide,hashchange（window对象的）
+
+⑧设备事件
+orientationchange:（ios设备，window的）
+window.orientation表示屏幕的方向，分别有0,90，-90
+
+MozOrientation:(firefox,window的，带加速计设备才支持)
+event有x,y,z 3个属性表示当前的屏幕方向，值在-1~1
+
+deviceorientation（与前者类似，支持较广泛）
+有额外属性：alpha（左右度数），beta（前后度数），gamma（旋转度数），absolute，compassCalibrated（指南针是否校准过）
+
+devicemotion（）
+属性：acceleration（包含x,y,z属性，不考虑重力情况下每个方向上的加速度），
+accelerationIncludingGravity（同上，考虑z轴自然重力加速度），
+interval（时间，必须在另一个devicemotion事件触发前传入），
+rotationRate（alpha，beta，gmma）
+使用前需判断是否为null
+
+⑨触摸和手势
+touchstart，touchmove（手指在屏幕滑动时连续触发，调用preventDefault()可阻止滚动），touchend，touchcancel。
+以上几个事件都会冒泡也都可以取消。以上事件对象除常见dom属性外，还有以下属性：
+touches，targetTouches，changeTouches，clientX，clientY，identifier，pageX，pageY，screeenX，screenY，target
+
+手势事件：
+gesturestart：（两个手指都按下时）
+gesturechange：
+gestureend：（任一手指移开时）
+
+6.5内存和性能
+每个函数都是对象，都会占用内存，进而影响性能。
+6.5.1事件委托
+因为这些事件大部分都是冒泡的，即在dom树中尽量最高的层次添加一个事件处理程序，而不是给每个需要处理点击的元素都加，然后在事件程序中根据点击target来执行不同的操作。比较适用的是click，mousedown/up,keydown/up,keypress。
+
+6.5.2移除事件处理程序
+在不需要的时候移除事件处理程序
+如元素被删除了，此时对应的事件处理程序如果不需要了可以移除。如果移除的是包含绑定该事件的元素，则要在事件中提前移除。（在事件中删除绑定事件的元素也是阻止冒泡的一种方式）
+另外，在页面卸载（切换，刷新等）时，最好在onunload事件中将事件处理移除，此时如果使用事件委托则移除比较方便。（使用onunload事件处理程序意味着页面不会被缓存在bfcache中）
+
+6.6模拟事件
+6.6.1DOM中的事件模拟
+document.createEvent()参数是一个字符串表示事件类型，DOM2级使用英文复数形式（结尾带s），DOM3级使用单数。常用如下：
+UIEvent（s），MouseEvent（s）,MutationEvent（s），HTMLEvents（DOM3没有该类型）
+
+上边创建了事件后，使用dispatchEvent()触发（可以在任意dom元素触发），而触发后的执行，则是在创建了事件之后需要通过如鼠标事件是创建事件后返回的对象的initMouseEvent()来指定的，参数有15个，对应event的属性。
+
+模拟键盘：类型是KeyboardEvent
+初始化方法是initKeyEvent()
+类似有模拟鼠标、键盘、按键等
+
+自定义DOM事件：
+createEvent('CustomEvent'),initCustomEvent()（参数有type（如keydown），bubbles，cancelable，detail）
+如：EentUtil,addHandler(div, 'myevent', function(event){
+	alert(event.detail)//就是下边指定的'hello'
+})//指定myevent
+if (document.implementation.hasFeature('CustomEvents','3.0'){
+	event = document.createEvent('CustomEvent')
+	event.initCustomEvent('myevent',true,false,'hello')
+
+IE8之前，document.createEventObject()来创建event对象，没有参数，然后再为返回的对象指定属性，即没有前边说的initxxx，而是直接给其对应的属性赋值。触发则是fireEvent()，而事件的类型，则是作为fireEvent的第一个参数指定，第二个参数是事件
+	event.dispatchEvent(event)
+}
+
+
+7 表单
+7.1
+常用属性方法：action，method，name，reset(),submit()
+可通过id或document.forms[name/index]等获取
+提交：input type='submit',button type='submit',input type='image' src='xxx'
+
+可以使用上边添加submit事件的方法取消阻止默认行为来阻止提交，而直接调用submit()方法不会触发添加的事件。重置表单type=‘reset’，同样可以添加重置事件，但是调用reset会触发事件。
+
+表单的元素是elements属性，可以通过name或者index访问，有length，name相同则返回NodeList。
+除了<fieldset>元素，所有表单字段都拥有相同的一组属性：
+disabled,form（只读）,name,readOnly,tabIndex（tab切换的序号）,type（select-one/multiple/button/submit等等）,value,autofocus。方法：focus(),blur();
+事件：blur,change,focus，（文本有select）
+
+7.2文本框脚本
+input：
+type=‘text’，size（显示的字符数），maxlength；
+textarea：
+rows，cols，无最大字符数属性
+
+两者的值都保存在value中。最好直接通过属性访问，而不是使用DOM的setAttribute等方法来读写这些属性。
+
+select()方法，用于选中文本，常用于在focus事件中，效果就是获得焦点时直接选中，避免需要一个个删除。
+
+而select后会触发select事件。
+获取选择的文本
+function getSelectedText(textbox) {
+	if (typeof textbox.selectionStart == 'number') {
+		return textbox.value.substring(textbox.selectionStart, textbox.selectionEnd)
+	} else if (document.selection) {
+		// IE8及以前
+		return document.selection.createRange().text
+	}
+}
+
+选择文本：
+除select()外，还有setSelectionRange(start,end),ie8及以前则是createTextRange(),然后collapse(),再moveStart(),moveEnd(),然后range.select()
+function selectText(textbox, start, end) {
+	if (textbox.setSelectionRange) {
+		textbox.setSelectionRange(start, end)
+	} else if (textbox.createTextRange) {
+		var range = textbox.createTextRange()
+		range.collapse(true)
+		range.moveStart('character', start)
+		range.moveEnd('character', end - start)
+		range.select()
+	}
+	textbox.focus()
+}
+
+过滤输入：
+在keypress事件中，输入不符合要求的字符时，通过preventDefault()来阻止。
+前边的EventUtil.getCharCode()获取字符编码后，通过String.fromCharCode(charcode)可以获得对应的字符串。后边的逻辑看具体业务需求和浏览器而定。
+
+操作剪贴板：
+beforecopy，copy，beforecut，cut，beforepaste，paste。
+访问剪贴板：IE的在window下的clipboardData，而其他则是在相关事件的event下。clipboardData有：
+getData()（一个参数，表示数据类型，text，url等）,setData()（类型和要放的文本）,clearData()
+
+getClipbordData: function(event, type='text') {
+		var clipbordData = event.clipbordData || window.clipbordData
+		return clipbordData.getData(type)
+	},
+	setClipbordData: function(event, value) {
+		if (event.clipbordData) {
+			// 返回的值是成功失败的布尔值
+			return event.clipbordData.setData('text/plain', value)
+		} else if (window.clipbordData) {
+			return window.clipbordData.setData('text', value)
+		}
+	}
+可在paste事件中用于粘贴前的判断校验。不过浏览器支持性有不同
+
+自动切换焦点：
+添加keyup事件，判断如果输入的长度等于maxlength则下一个元素focus()
+
