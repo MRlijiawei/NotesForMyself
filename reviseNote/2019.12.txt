@@ -867,3 +867,130 @@ getClipbordData: function(event, type='text') {
 自动切换焦点：
 添加keyup事件，判断如果输入的长度等于maxlength则下一个元素focus()
 
+H5约束验证api
+required，type（email，url等，number，range，datetime，datetime-local，date，month，week，time等），min，max，step（stepUp/Down(steps（默认不传为1）)），pattern（正则）（检测是否支持：'pattern' in document.createElement('input')）
+
+检测有效性：checkValidity(),form和单项都有该方法。
+此外validity属性里有详细的校验信息：
+customError：如果设置了setCustomValidity()则为true
+patternMismatch：如果值与给定的pattern属性不匹配，返回true
+rangeOverflow，rangeUnderflow（min和max校验）
+stepMisMatch，tooLong，typeMismatch，valid，valueMissing（required校验）
+
+禁用验证：form表单novalidate属性或在js里设置表单的noValidate=true
+选项里比如提交按钮禁用验证则是formnovalidate属性
+
+7.3 选择框脚本
+add(newOption, relOption)：在相关项relOption之前插入新的选项
+multiple：多选
+options，remove(index)，selectedIndex（没有选则为-1），
+size：选择框中可见的行数
+选择框的type是‘select-one/multiple’
+若没有指定value，则取文本。
+options选项集合元素的属性：index,label,selected,text,value
+修改选择项的方法：设置selectedIndex，或者设置选项的selected
+
+添加选项：
+①使用dom，创建option标签，插入文本节点，设置value属性，然后将option标签插入到select里（appendChild，insertBefore等）
+②使用Option构造函数：new Option（text，value），然后插入。但是ie8及以前会有问题
+③使用add，新建标签（如2中），然后select.add(标签，undefined)第二个参数传undefined才可以插入到结尾。
+
+移除选项：
+removeChild(选项)，选择框的remove(选项下标)，将选项置为null。3种方法
+
+移动和重排选项：
+insertBefore，appendChild等
+
+表单序列化：serialize()
+
+7.4
+富文本编辑
+原理是使用iframe嵌入一个文档，嵌入的文档的designMode设置为on（比如在嵌入的页面的onload里设置。），另外一种就是不需要插入文档，直接给需要作为富文本的元素设置contenteditable属性（js则是对应的驼峰属性:true，false，inherit（继承父元素））
+
+操作富文本：（先选中区域？）
+document.execCommand()，3个参数，分别是要执行的命令（特定字符），一个布尔值（是否提供用户界面，设置成false，firefox不支持true），第三个是null或具体值。
+如：frames['richedit'].document.execCommand('createlink', false, 'www.xxx.com')
+
+其他：queryCommandEnabled(命令)检测是否可以对当前选中的文本执行该命令；
+queryCommandState(命令)确定是否已将命令应用到文本，
+queryCommandValue(命令)
+
+富文本选区：
+框架iframe的getSelection()方法，可以确定实际选择的文本。是window和document的属性，返回一个Selection对象，属性：
+anchorNode：选区起点所在节点
+anchorOffset：在到达起点之前跳过的anchorNode中的字符数量
+focusNode：选区终点节点
+focusOffset：focusNode中包含在选区内的字符数量
+isCollasped：起点终点是否重合
+rangeCount：选区包含的DOM范围的数量
+方法：
+addRange(range)：
+collapse(node, offset):
+collapseToEnd(),collapseToStart(),containsNode(node)（节点是否包含在选区）,
+deleteFromDocument()（删除选择的内容，与前边通过命令删除效果相同）,
+extend(node, offset)（扩展）,getRangeAt(index),removeAllRanges()（相当于取消选择）,
+removeRange(range),selectAllChildren(node)（取消选择并选中指定节点的所有子节点）,toString()
+
+range有htmlText和pasteHTML()属性和方法。我们在提交到服务器时，直接取富文本的innerHtml即可。
+
+
+8 Canvas
+设置样式和宽高，获取上下文（getContext('2d/3d')），然后进行绘制。目前3D支持尚不完善。
+导出图片：toDataURL(MIME类型格式)
+
+8.1 2D上下文
+①填充和描边
+对应的属性是fillStyle，strokeStyle。它们的默认值是‘#000000’，可以是字符串、渐变对象、模式对象。一旦设置后，后边绘制的对象就是设置的这两个样式，直到被再次设置成别的值。
+
+②绘制矩形
+矩形是唯一一种可以直接在2D上下文中绘制的形状。矩形相关方法：
+fillRect(),strokeRect(),clearRect()，参数都是x，y，宽，高这4个。
+分别是画填充的矩形，画只有边框的矩形，清除指定区域（扣除）
+
+③绘制路径
+beginPath(),然后开始绘制：
+arc(x,y,radius,startAngle,endAngle,角度是逆时针还是顺时针（true为逆时针）)；
+arcTo(x1,y1,x2,y3,radius)：从上一点开始。。。;
+bezierCurveTo(c1x,c1y,c2x,c2y,x,y):从上一点，以c1，c2两个点为控制点画到x，y；
+lineTo(x,y),moveTo(x,y),
+rect(x,y,width,height)：绘制矩形路径
+
+如果想连到起点（即将线条区域封闭），使用closePath()；如果路径已完成，要使用fillStyle填充，可使用fill();还可以使用stroke()来为路径描边（不描边不显示？）；还可使用clip()在路径上创建一个剪切区域。
+
+判断点是否在路径上：context.isPointInPath(x,y)
+
+线条样式属性
+lineCap:        设置或返回线条的结束端点样式
+butt         默认。向线条的每个末端添加平直的边缘。
+round         向线条的每个末端添加圆形线帽。
+square         向线条的每个末端添加正方形线帽。
+
+lineJoin:        设置或返回两条线相交时，所创建的拐角类型
+bevel         创建斜角。
+round         创建圆角。
+miter         默认。创建尖角。
+
+lineWidth:        设置或返回当前的线条宽度
+number         当前线条的宽度，以像素计
+
+miterLimit:        设置或返回最大斜接长度
+number         正数。规定最大斜接长度。
+
+④绘制文本
+fillText(),strokeText()。参数：字符串，x，y，最大像素宽度（可选）。
+属性：
+(content.)font,textAlign,textBaseLine.
+辅助确定文本大小measureText(text)，返回对象目前只有width属性，根据当前字体大小确定文本的宽度。
+
+⑤变换
+rotate(角度)，scale(x比例，y比例)，translate（x,y）将坐标原点移动到x，y；
+transform(m1_1,m1_2,m2_1,m2_2,dx,dy)：直接修改变换矩阵，方式是乘以如下矩阵：
+m1_1  m1_2  dx
+m2_1  m2_2  dy
+0     0     1
+setTransform(m1_1,m1_2,m2_1,m2_2,dx,dy)，重置为默认后再执行上边的。
+
+save()方法，将当前设置的颜色等保存在一个栈中，这样后边再修改就不会影响前边画好的了（？）。
+restore()回到之前保存状态。save只保存设置和变换，不保存内容。
+
+⑥绘制图像
