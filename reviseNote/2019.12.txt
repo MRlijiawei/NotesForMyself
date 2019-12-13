@@ -994,3 +994,148 @@ save()方法，将当前设置的颜色等保存在一个栈中，这样后边再修改就不会影响前边画好的
 restore()回到之前保存状态。save只保存设置和变换，不保存内容。
 
 ⑥绘制图像
+drawImage(image元素, x, y, width, height)宽高默认是原图尺寸
+或
+drawImage(image,源图起点x,源图起点y,源图要截取的宽度,源图要截取的高度,目标起点x,目标起点y,目标区域宽度,目标区域高度)实现将源图的一部分画出来。
+源图除了可以是image外，还可以是canvas
+
+⑦阴影
+shadowColor,shadowOffsetX,shadowOffsetY,shadowBlur
+
+⑧渐变
+createLinearGradient(x1,y1,x2,y2),createRadialGradient(x1,y1,radius1,x2,y2,radius2)
+例如：
+var grad = context.createLinearGradient(x1,y1,x2,y2)
+grad.addColorStop(0, xxx)
+grad.addColorStop(1, xxx)
+
+context.fillStyle = grad
+xxxx
+
+⑨模式
+模式就是重复的图像，可以用来填充或描边图形。
+createPattern(img/video/canvas元素, 重复方式（即css中的background-repeat）)
+
+⑩图像数据
+getImageData(x,y,width,height)，返回的是ImageData实例，有宽高和data属性，data是一个数组，保存每一像素的数据，单个像素的数据是红绿蓝和透明度组成的数组。
+putImageData(imageData,x,y)
+例：
+图像转黑白：
+function getBWImg(image) {
+	var canvas = document.createElement('canvas')
+	canvas.width = image.width
+	canvas.height = image.height
+	var context = canvas.getContext('2d')
+	context.drawImage(image, 0, 0)
+	var imageData = context.getImageData(0,0,image.width,image.height)
+	var data = imageData.data
+	var average
+	for(var i=0,len = data.length;i<len;i+=4) {
+		average = Math.floor((data[i]+data[i+1]+data[i+2])/3)
+		data[i] = average
+		data[i+1] = average
+		data[i+2] = average
+	}
+	imageData.data = data
+	context.putImageData(imageData,0,0)
+	image.src = canvas.toDataURL('image/png')
+	canvas.remove()
+}
+
+11.合成
+透明度：globalAlpha，混合模式：globalCompositionOperation。（context的属性）
+
+8.2 WebGL
+3d的canvas
+8.2.1类型化数组
+new ArrayBuffer(字节数)（数组缓冲器）
+创建的对象通过byteLength属性访问字节数
+
+①视图
+一般是DataView
+var view = new DataView(buffer, 开始节点, 占用字节长度（可选）)
+这样视图也就有了byteLength和byteOffset两个属性，以及buffer属性，即ArrayBuffer对象
+获取和写入则有根据位数不同的getter和setter（8,16,32,64）
+
+②类型化视图
+都继承DataView，
+Int8Array，Unit8Array等
+
+8.2.2
+WebGL上下文
+canvas.getContext('experimental-webgl')
+返回null表示不支持。
+可以添加第二个参数，来设置支持选项。比如alpha，depth等
+
+常量，方法命名，绘图，视口，坐标，错误，着色器，纹理，读取像素
+
+目前支持和规范尚未统一，3D也比2D更为复杂
+
+
+9 H5脚本编程
+
+9.1 跨文档消息传递（XDM，现叫Web Messaging），即不同域的通信
+核心是postMessage()方法，参数是消息内容和接收方域，第二个参数是'*'表示任意,如：
+向某iframe发送消息：
+iframe.postMessage(xxx,xxx)
+接收到消息会触发message事件，异步的。接收事件对象有data、origin、source 3个主要属性。
+如：
+EventUtil.addHandler(window, 'message', function(event) {
+	if (event.origin === 'xxx') {
+		//处理event.data
+		// 消息回复
+		event.source.postMessage(xxx,xxx)
+	}
+})
+传递的data一般是字符串，有的浏览器可以是对象等，但是保险起见还是都转成字符串传递。
+
+9.2 原生拖放
+dragstart，drag，dragend事件（对于拖动元素）
+
+dragenter，dragover，dragleave，drop事件（对于放置元素）
+
+元素默认是不能放置的，所以移动到上边会显示禁止图标，但是可以通过为放置目标添加dragenter，dragover事件来使其变成可放置。
+
+event.dataTransfer对象，有getData(),setData()方法，参数是数据类型和数据，类型有text和URL两种，现已扩展到很多种。设置的对象只有在drop事件中读取。默认拖动时会自动设置这些数据，也可以自己手动设置。扩展类型名在IE10及以前的版本都不支持；
+有dropEffect和effectAllowed属性：
+dropEffect属性有none，move，copy，link 4个可能值，每个都会导致光标显示不同符号，是针对放置目标的，可以在dropenter事件中修改；
+dropEffect只有搭配effectAllowed才有用，后者的值有uninitialized，none，copy，link，move，copyLink，copyMove，linkMove，all。而该值是在dragstart事件中设置的
+
+draggable属性
+
+浏览器兼容性稍有不同，统一的处理方式是设置为可拖动-》在拖动开始事件和拖入事件设置数据和鼠标样式-》放置对象的一些方法中设置相应的效果样式-》drop事件最终处理数据和页面。
+
+H5规定的dataTransfer对象的额外方法属性：
+addElement(元素)：不会影响页面元素外观，而影响响应回调的对象，目前浏览器尚未都实现；
+clearData(格式)：消除以特定格式保存的数据（实现较好）；
+setDragImage(元素,x,y)：指定一幅图，拖动时显示在光标下方，xy是光标在图像中的坐标；
+types
+
+9.3 媒体元素
+音频视频，如果不支持，则显示标签中的文本。属性：
+src，width，height，poster（加载期间显示的图片），controls（操作控件是否显示），
+不同浏览器可能媒体格式支持不同，因而可以在标签内使用一个或多个source元素，来指定不同的src
+
+其他属性：
+autoplay，buffered（当前已下载缓存的时间范围），bufferedBytes（当前已下载缓存的字节范围），
+bufferingRate（每秒平均接收到的位数），bufferingThrottled（是否缓冲节流），currentLoop（当前循环次数），currentSrc，currentTime（已播放秒数），defaultPlaybackRate（播放速度），duration，ended，loop，muted（静音），networkState，paused，playbackRate，played，readyState，seekable，seeking，src，start，totalBytes，videoHeight，videoWidth，volume（音量）
+
+事件：
+abort，canplay，canplaythrough，canshowcurrentframe，dataunavilable，durationchange，emptied，empty，ended，error，load，loadeddata，loadedmetadata，loadstart，pause，play，playing，progress，ratechange，seeked，seeking，stalled，timeupdate，volumechange，waiting
+
+方法：
+play(),pause()
+
+检测编解码器的支持情况：
+canPlayType()参数是前边说的类型，返回是空或也许
+
+Audio类型：
+与Image类似，但是不是必须要插入到文档，所以可以实现类似隐身播放，如：
+var audio = new Audio('xxx.mp3')
+EventUtil.addHandler(audio, 'canplaythrough', function(event){
+	audio.play()
+})
+
+9.4 历史状态管理
+hashchange，history.pushState(状态对象，新状态标题，URL（可选）)
+processState(state),popstate,replaceState(),pushState()
