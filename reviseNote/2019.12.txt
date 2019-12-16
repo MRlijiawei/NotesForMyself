@@ -1139,3 +1139,162 @@ EventUtil.addHandler(audio, 'canplaythrough', function(event){
 9.4 历史状态管理
 hashchange，history.pushState(状态对象，新状态标题，URL（可选）)
 processState(state),popstate,replaceState(),pushState()
+
+
+10 错误处理
+
+10.1 try-catch，error.message属性
+后如果接finally{}，则无论前边发生了什么，都会执行。catch和finally有一个即可。
+错误对象：xxx
+throw，throw new Error(xxx)；throw 任意值或对象
+
+错误事件error，参数是错误信息，url，行号。return false可阻止浏览器的默认错误报告。
+
+常见错误类型：类型转换、数据类型、通信。
+如判断一个参数，最好不要直接用if(xxx)，而要用if(typeof xxx xxx)
+
+（非）致命错误：
+错误发生了之后无法继续执行。比如，在for循环中调用方法，如果中间发生错误，可能无法继续执行后边的。可以改成使用try catch，这样就不会影响下一次调用。
+
+错误记录：
+如：function logError(level, msg) {
+	var img = new Image()
+	img.src = 'log.php?lv='encodeURIComponent(level) + '&msg=' + encodeURIComponent(msg)
+}
+使用Image对象来发生消息，避免跨域，避免不支持XMLHttpRequest等。
+
+
+11 XML,XPath,XSLT，E4X（已废弃）
+
+
+12 JSON
+JSON的语法可以表示三种类型：简单值（数字，字符串等），对象，数组。
+JSON与JS的最大区别在于，必须（字符串和对象的label等）使用双引号。
+
+12.1 解析和序列化
+
+早期：eval(),
+JSON的两个方法：stringify()和parse()，序列化时会忽略无效的项（如值为undefined的属性会被跳过）
+
+stringify()有3个参数，JSON对象，过滤器（数组或函数），是否保留缩进及缩进数（数字）的选项。
+如，过滤器表示序列化后的字符仅保留过滤器中列出的属性。如果过滤器是一个函数，函数有两个参数，分别是key和value，可以进行自定义的处理。
+
+toJSON()方法，如Date的toJSON方法，或自己封装对象的toJSON。
+
+parse()方法除了字符串外还可以接收一个参数，表示还原函数。与stringify的过滤器函数形式相同。
+
+
+13 Ajax和Comet
+
+13.1 XMLHttpRequest
+最早是在IE5的MSXML库的一个ActiveX对象实现。在IE7以后，可直接使用XMLHttpRequest对象。
+
+方法：
+open():参数：请求类型（get，post等），url，是否异步
+
+open只是启动，不会发送请求，需要调用send()才会发送
+
+send():参数：body数据，如果不需要，必须传null。
+abort()取消
+
+发送请求得到相应后，会自动填充XHR对象的属性，相关属性：
+responseText，responseXML，status，statusText。
+status 200表示成功，304表示可以使用缓存。
+
+异步请求需要检测XHR对象的readyState属性，0表示尚未open，1表示open-》send中间，2表示send，3表示接收到部分，4表示完成。
+
+对应的事件是readystatechange事件。需要在open之前指定onreadystatechange事件才能保证跨浏览器兼容。
+
+HTTP头部信息：
+setRequestHeader(key, value)（需要在open之后，send之前）
+getResponseHeader(key),getAllResponseHeaders()
+
+13.2 XMLHttpRequest 2级
+
+①FormData
+例如：
+var data = new FormData()
+data.append(key, value)
+
+var data = new FormData(document.forms[0])
+
+②超时设定
+timeout，方法：ontimeout
+超时时readystate是4，在readystatechange中可能会异常，因而可以包在try-catch里
+
+③overrideMimeType(type)，需在send之前
+
+13.3 进度事件
+loadstart，progress，error，abort，load，loadend
+需在open之前添加，progress有event参数
+
+13.4 跨域，CORS
+发送请求时添加额外的Origin头部，如果服务器认为可以接收这个请求，就在Access-Control-Allow-Origin头部中回发相同的源信息（如果是公共资源可以回发‘*’）
+
+①IE的XDR（XDomainRequest）
+只能设置头的Content-Type等，open方法只有两个参数，请求都是异步的。
+
+②其他浏览器
+webkit通过XHR实现了跨域的原生支持，只需要在跨域时open传的url用绝对URL即可。头部的一些读写稍有限制
+
+③Preflighted Requests（支持性有限）
+
+④带凭据的请求
+
+⑤封装
+function createCORSRequest(method, url) {
+	var xhr = new XMLHttpRequest()
+	if ('withCredentails' in xhr) {
+		xhr.open(method, url, true)
+	} else if (typeof XDomainRequest != 'undefined') {
+		xhr = new XDomainRequest()
+		xhr.open(method, url)
+	} else {
+		xhr = null
+	}
+}
+
+13.5 其他跨域技术
+利用DOM中能够执行跨域请求的功能，可以在不依赖XHR的情况下发送请求，而且不需要修改后台代码
+
+①图像Ping
+使用Image指定src等于接口来实现跨域，可以侦听load和error事件，单向的。比如跟踪用户点击，页面访问量统计等。
+只能发送get请求，无法访问响应文本，单向通信。
+
+②JSONP（JSON with padding）被包含在函数调用中的JSON
+组成：回调函数，数据
+如：function handelRes(res) {}
+var script = document.createElement('script')
+script.src = 'xxx?callback=handelRes'
+document.body.insertBefore(script, document.body.firstChild)
+
+可以双向，可以访问返回，但是因为是从其他域请求，安全性需要保证，且对于请求是否失败不容易判断。
+
+③Comet
+服务器控制时间（如有数据刷新时才）向浏览器发送数据，然后浏览器在statechange事件中在状态3和4时根据返回的信息做一些处理和回调，以及是否再次查询。
+实现方式：长轮询，流
+
+④服务器发送事件（SSE）
+实现方式：长轮询，短轮询，HTTP流。需要使用EventSource对象，事件有open，message，error，close()方法等。响应的MIME类型为text/event-stream。可以添加一个id，下次自动重连时会发送回去。
+如
+var source = new EventSource(同域URL)
+suorce.onmessage = function(event) {}
+
+⑤Web Sockets
+在一个单独的持久连接上提供全双工，双向通信。使用了自定义的协议，URL模式是ws://，加密的是wss://，与http和https不同。
+优点是数据包小，节省带宽，适合移动端。缺点是一致性和安全性。
+例：
+var socket = new WebSocket('ws://xxxxx')
+属性：WebSocket.OPENING(0),WebSocket.OPEN(1),WebSocket.CLOSING(2),WebSocket.CLOSE(3)
+没有readystatechange事件，但是有别的，可以close()关闭
+
+打开之后，可以通过send(data)发送数据,只能发送纯文本。
+接收消息：onmessage
+其他事件：open，error，close。
+不支持DOM2级事件侦听器，因此必须使用DOM0级语法定义事件处理程序。
+如socket.onopen = xxx,socket.onerror = xxx,socket.onclose = xxx
+close事件的event才有信息，包含原因，状态等。
+
+而XHR和SSE组合也能实现双向通信。WebSocket更适合聊天室等，且需要建立和维护WebSocket服务器。
+
+13.6 安全性
