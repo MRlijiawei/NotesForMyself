@@ -1324,3 +1324,75 @@ function Person(name, age) {
 还可以将方法改成自执行的写法，在if分支返回不同的匿名函数，这样初始化时会损失一点性能。后续不再损失。
 
 ④函数绑定（同样是this和闭包的问题）
+
+function bind(fn, context) {
+	return function() {
+		return fn.apply(context, arguments)
+	}
+}
+
+⑤函数柯里化
+基本方法同函数绑定
+
+
+14.2防篡改对象
+无法撤销，使用ES5新增的方法来设置，效果同改对象的几个设定相关属性。
+
+①不可扩展对象
+Object.preventExtension(obj)
+判断是否可扩展：Object.isExtensible()//false
+
+②密封对象
+Object.seal()，不可扩展，不能删除属性和方法。判断是否密封Object.isSealed()//true
+
+③冻结对象
+Object.freeze()，不可扩展，密封，writable被设置为false，如果定义set函数则访问器属性可写。判断：Object.isFrozen()
+
+14.3高级定时器
+①重复的定时器
+即将定时器interval改为timeout写法。事件机制是先入事件栈排好顺序然后执行完前边的（空闲了）再执行下一个，所以interval在出现在下一个时钟周期还未执行完前边的东西时会导致跳过。避免跳过，改成链式timeOut
+setTimeout(function(){
+	//xxxxx业务代码
+	// if...
+	setTimeout(arguments.callee, interval)
+}, interval)
+
+②Yielding Processes
+比如在循环中运行需要比较久的模块，且循环次数多，导致超出了浏览器的限制，页面就会“崩溃”。可采用数组分块的方法，即将循环的数组拆开一项一项设置timeout执行
+function chunk(arr, func, context) {// 数组，要执行的方法，上下文(可选)
+	setTimeout(function(){
+		var item = array.shift()
+		process.call(context, item)
+		if (array.length > 0) {
+			setTimeout(arguments.callee, 100)
+		}
+	}, 100)
+}
+使用时如果需要保护数组不变，可以使用chunk(arr.concat(),xxx)，类似深复制的原理。
+
+③函数节流
+比如在操作DOM时，占用内存会比其他操作更多，如果占用过大，会导致页面崩溃，如IE使用resize
+事件，在改变大小时是连续触发的。可使用定时器对函数进行节流。
+
+函数节流的基本思想是，某些代码不可以在没有间隔的情况下连续重复执行。这里的原理就是在前边的基础上，判断旧的定时器是否执行完，没有则将其替换为新的定时器（之前的相当于被销毁不再执行）。
+var processor = {
+	id: null,//定时器id
+	perfom: function(){},//实际要执行的代码
+	process: function(){
+		clearTimeout(this.id)
+		var that = this
+		this.id = setTimeout(function(){
+			that.perfom()
+		}, 100)
+	}
+}
+processor.process()//调用
+简化：
+function throttle(method, context) {
+	clearTimeout(method.id)
+	method.tId = setTimeout(function(){
+		method.call(context)
+	},100)
+}
+
+14.4自定义事件
