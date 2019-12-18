@@ -1396,3 +1396,213 @@ function throttle(method, context) {
 }
 
 14.4自定义事件
+事件是js与浏览器交互的主要途径，事件是一种观察者设计模式，松耦合。对象可以发布事件。
+观察者模式由两类对象组成：主体和观察者。
+主体发布事件，观察者通过订阅这些事件来观察主体。主体不知道观察者，观察者知道主体的注册事件回调即事件处理程序。比如在DOM上，DOM元素就是主体，事件处理代码就是观察者。
+
+而观察者不用于DOM时，就是自定义事件。
+function EventTarget() {
+	this.handlers = {}
+}
+EventTarget.prototype = {
+	contructor: EventTarget,
+	addHandler: function(type, handler) {
+		if (typeof this.handlers[type] === 'undefined') {
+			this.handlers[type] = []
+		}
+		this.handlers[type].push(handler)
+	},
+	// 触发
+	fire: function(event) {
+		if (!event.target) {
+			event.target = this
+		}
+		if (this.handlers[event.type] instanceof Array) {
+			var handlers = this.handlers[event.type]
+			for (var i=0, len=handlers.length; i<len; i++) {
+				handlers[i](event)
+			}
+		}
+	},
+	removeHandler: function(type, handler) {
+		if (this.handlers[type] instanceof Array) {
+			var handlers = this.handlers[type]
+			for (var i=0, len=handlers.length; i<len; i++) {
+				if (handlers[i] === handler) {
+					break
+				}
+			}
+			handlers.splice(i, 1)
+		}
+	}
+}
+
+14.5拖放
+结合自定义事件的拖放
+var DragDrop = function() {
+	// 在自定义事件的基础上
+	var dragdrop = new EventTarget(),
+		dragging = null,
+		diffx = 0,
+		diffy = 0
+	function handleEvent(event) {
+		event = EventUtil.getEvent(event)
+		var target = EventUtil.getTarget(event)
+		switch (event.type) {
+			case 'mousedown':
+				if (target.className.indexOf('draggable') > -1) {
+					dragging = target
+					diffx = event.clientX - target.offsetLeft
+					diffy = event.clientY - target.offsetTop
+					dragdrop.fire({type: 'dragstart', target: dragging, x: event.clientX, y: event.clientY})
+				}
+				break
+			case 'mousemove':
+				if (dragging !== null) {
+					// 指定位置
+					dragging.style.left = (event.clientX - diffx) + 'px'
+					dragging.style.top = (event.clientY - diffy) + 'px'
+					// 触发自定义事件
+					dragdrop.fire({type: 'drag', target: dragging, x: event.clientX, y: event.clientY})
+				}
+				break
+			case 'mouseup':
+				dragdrop.fire({type: 'dragend', target: dragging, x: event.clientX, y: event.clientY})
+				dragging = null
+				break
+		}
+	}
+	// 公共接口
+	dragdrop.enable = function() {
+		EventUtil.addHandler(document, 'mousedown', handleEvent)
+		EventUtil.addHandler(document, 'mousemove', handleEvent)
+		EventUtil.addHandler(document, 'mouseup', handleEvent)
+	}
+	dragdrop.disable = function() {
+		EventUtil.removeHandler(document, 'mousedown', handleEvent)
+		EventUtil.removeHandler(document, 'mousemove', handleEvent)
+		EventUtil.removeHandler(document, 'mouseup', handleEvent)
+	}
+	return dragdrop
+}
+
+
+15 离线应用与客户端存储
+15.1 离线检测
+navigator.onLine
+事件：online，offline，在window对象上（IE不确定是否有）
+
+15.2 应用缓存
+从浏览器缓存中分出来的一块缓存区。要在其中保存数据，可以使用一个描述文件（manifest file），列出要下载和缓存的资源。示例：
+CACHE MANIFEST
+#Comment
+
+file.js
+file.css
+有很多设置描述文件的选项和方法。
+要将描述文件与页面关联，可以在<html>标签指定manifest属性为文件路径如：
+<html manifest="xxx.manifest">，扩展名现在推荐使用.appcache。文件的MIME类型必须是text/cache-manifest。
+
+离线存储的API，核心是applicationCache对象，有一个status属性，0-无，1-闲置，2-检查中，3-下载中，4-更新完成，5-废弃。事件：
+checking，error，noupdate，downloading，progress，updateready，cached。
+可手动调用update()方法触发事件，调用swapCache()来启用新应用缓存。
+EventUtil.addHandler(applicationCache, 'updateready', function(){
+	applicationCache.swapCache()
+})
+
+15.2 数据存储
+① cookie
+限制：
+绑定在特定域名下，每个域名的cookie数量限制不同浏览器不同，大小限制4096B（4096+-1，因而最好设置不超过4095B），是每个域下的大小限制而不是单个cookie。
+
+构成：
+名称（不区分大小写），值（URL编码的），域（默认设置该cookie的域），路径（特定路径下才发送cookie），失效时间（设置时间后只有到时间才会删除，不再会关闭浏览器就删除），安全标志（指定后SSL连接才发，即https，设置方法是secure）
+设置：
+Set-Cookie:name=xxx; expires=xxx; domain=xxx; secure
+分号+空格分割
+
+JS中的cookie
+
+子cookie，即在cookie的一段中再分段用以存储一些信息。
+
+② IE用户数据（ie5）
+元素save()保存和load()方法取，参数是指定的数据名称。。。
+
+③ web存储机制
+Web Storage，Storage对象
+方法：
+clear()（火狐没有）
+getItem(name)
+key(index)
+removeItem(name)，或使用delete sessionStorage.属性名
+setItem(name, value)
+get set可换成使用点加属性名
+
+sessionStorage:
+浏览器关闭后消失；跨页面存在；崩溃后重启仍可用（IE不支持）；绑定于某个服务器会话，所以只能有存储的页面访问。
+IE是异步写入，其他是同步。IE8有begin，commit来强制写入
+有length属性，可用使用key(index)方法结合for循环来迭代，还可以使用for-in迭代
+
+如果需要跨会话，则需要使用localStorage或globalStorage（被local取代）
+localStorage：
+同域名、端口、协议可访问；数据保留到JS删除或用户清除。其他同sessionStorage
+
+storage事件
+对Storage对象的任何操作都会触发storage事件，event属性：domain，key，newValue，oldValue。（支持性需注意一下）
+
+限制：
+对于每个来源来说的，限制一般是2.5M或5M
+
+④ IndexedDB
+替代Web SQL。异步操作,使用对象保存数据而非表。
+var indexedDB = window.indexedDB || window.msIndexedDB || window.mozIndexedDB || window.webkitIndexedDB
+
+使用：
+  打开请求：indexDB.open(数据库名),返回IDBRequest对象。在对象上添加onerror和onsuccess，事件的event的target有errorCode或result（失败或成功时）
+
+  指定版本号（默认没有版本号），setVersion(字符串),以区分是否打开过，建立对象存储空间
+
+  对象存储空间：
+示例：
+var store = db.createObjectStore('users', {keyPath: 'username'}
+
+  之后十一add()put()方法添加数据，参数是要保存的对象，分别用于新增和修改。可将其指定为一个变量，以方便为变量绑定error和success事件。如：
+var request = store.add(xxx)
+request.onerror = xxx
+
+  事务：
+db.transaction()创建事务，可指定参数来只加载指定的存储空间数据，如前边指定的‘users’，可使用数组来指定多个存储空间。第二个参数是访问模式，默认0表示只读，1读写，2改变，可用IDBTransaction接口的常量表示，在谷歌中叫webkitIDBTransaction。
+
+  取的事务后可使用objectStore()传入存储空间名称来访问或操作，get(),delete(),clear(),add(),put()，操作同上。
+
+  事务也有error和complete事件。
+
+  使用游标查询：
+在存储空间上调用openCursor()创建游标，同样需要绑定error和success事件。事件的target的result表示结果，保存IDBCursor实例或null，有以下属性：
+direction，key，value，primaryKey
+游标除了访问外还可以使用update()方法用指定对象更新当前游标的value，同样有error和success；
+还可以使用delete()删除记录，事件同。
+每个游标默认只发起一次请求，想要继续执行需要continue(key)或advance(项数)，没有则返回null。触发的是前边创建游标的事件（需确定）。
+
+  键范围：IDBKeyRange对象
+浏览器IE10+，谷歌叫webkitIDBKeyRange。指定范围方法：
+only(key)
+lowerBound(key, true（可选，表示不计该项）)
+同理有upperBound
+还有bound(上，下，两个同上的可选)
+
+  指定了范围之后将其作为创建游标的参数即可。
+  
+  设定游标方向：IDBCursor，webkitIDBCursor，使用常量属性
+可作为创建游标的第二个参数来指定方向
+
+  索引
+创建索引store.createIndex(索引名，索引属性名，{unique:true/false是否唯一})
+然后就可以使用索引进行操作。。。。。。
+deleteIndex删除索引
+
+  并发问题
+同源的另一个标签页也访问时。
+指定onversionchange事件，在另一个标签调用setVersion时就会触发，处理的最佳方式是关闭数据库以保证版本顺利更新。然后可以指定onblocked事件，在关闭时触发，提醒用户关闭其他（相同）页面，然后再执行setVersion等。
+
+  限制：同源，一般是5M大小，谷歌不允许本地文件访问。
