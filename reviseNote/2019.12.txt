@@ -1606,3 +1606,80 @@ deleteIndex删除索引
 指定onversionchange事件，在另一个标签调用setVersion时就会触发，处理的最佳方式是关闭数据库以保证版本顺利更新。然后可以指定onblocked事件，在关闭时触发，提醒用户关闭其他（相同）页面，然后再执行setVersion等。
 
   限制：同源，一般是5M大小，谷歌不允许本地文件访问。
+
+
+
+16 最佳实践
+16.1 可维护性
+代码约定，注释，变量和函数命名，松散耦合，尊重对象所有权，避免全局量，避免与null比较（目的性不够清晰），使用常量（将一些写死的东西抽离出来组成一个常量对象，如对于重复值，url，界面字符串（方便国际化））
+
+16.2 性能
+JS最初是解释型语言，执行速度比编译型语言慢，现已实现编译执行。
+注意作用域（访问全局变量比访问局部变量要慢），避免全局查找（如需要遍历dom元素并多次使用dom时，可使用一个指针指向dom将dom转为局部变量（即将dom赋值给一个局部变量），后续只需要使用这个指针变量，这样就只进行了一次全局查找。），避免with；
+
+选择正确的方法，避免不必要的属性查找（使用变量和数组要比访问对象上的属性效率高，因为对象访问属性相当于是一次搜索，可将重复的对象访问存储在变量中以降低复杂度），优化循环：减值迭代比增值一般更高效，简化终止条件的复杂度，简化循环体，使用后测试循环（for和while是前测试，即执行前判断，do-while是后测试循环，相当于减少一次判断？不过对于可能一次也不循环的情况，只能使用前测试循环），展开循环（消除循环，比如循环的次数是已知的固定的，直接对每一项执行循环体要比使用循环效率更高（相当于只执行不判断了），如对于大数据集，可使用duff装置展开，原理就是除以8然后循环），避免双重解释（JS想解析JS代码时就会存在双重解释惩罚，eval(),Function构造函数，setTimeout()传一个字符串参数时都会发送这种情况）
+其他：原生方法较快，switch语句较快（case也按最可能到最不可能来组织），位运算符较快
+
+最小化语句数，如多个变量声明可合成一个，插入迭代，数组和对象字面量写法减少语句数
+
+优化DOM交互，最小化现场更新（如循环操作dom时将最终结果生成之后再插入到页面），使用innerHtml代替createxxx，appendxxx等（innerHtml是使用解析器而非DOM调用所以比较快），使用事件代理（将事件绑定在高层节点上以减少冒泡），减少HTMLCollection（会返回HTMLCollection对象的操作：getElementByTagName，获取元素的childNodes，获取元素的attributes，访问了特殊集合如document.forms,documents.images等）
+
+16.3 部署
+构建过程：
+ant等工具
+
+验证：
+JSLint等
+
+压缩：
+文件压缩：删除额外空白换行，删除注释，缩短变量名（如YUI压缩器）；
+HTTP压缩：mod_zip,mod_deflate，浏览器请求后进行解压
+
+
+17 新兴的API
+17.1 requestAnimationFrame()参数是要执行的方法。平滑动画。可采用嵌套调用的方法，即在参数方法中再调用RAF，参数方法有一个时间戳的参数，表示下个重绘时间，距离上次重绘的时间，可以查询mozAnimationStartTime
+mozRequestAnimationFrame，webkitRequestAnimationFrame和msRequestAnimationFrame。后两者是基于前者实现的，但是有一些差别，比如参数没有时间戳。
+
+17.2 Page Visibility API
+页面是否可见、隐藏、最小化等
+document.hidden,document.visibilityState,visibilitychange事件。不同浏览器都有自己的前缀
+
+17.3 Geolocation API
+地理位置，navigator下的geolocation对象，方法：
+getCurrentPosition(成功回调，可选的失败回调，可选的选项对象)
+watchPosition()跟踪位置，效果等同于定时调用获取当前位置，但是是系统发出位置改变信号时触发的而不是自己轮询。
+取消跟踪，clearWatch()，写法类似于时钟的写法。
+
+17.4 File API
+一直以来只有input type=file来操作文件，现有File对象。
+FileReader类型：
+异步文件读取，类似请求。方法：
+readAsText(file,encoding),readAsDataURL(file),readAsBinaryString(file),readAsArrayBuffer(file)，abort()中断
+事件：progress，error，load，abort，loadend
+
+读取部分内容：slice(起始字节, 字节长度)方法
+火狐是mozSlice()，谷歌是webkitSlice()
+返回一个Blob实例，Blob是File类型的父类型，且也有slice方法
+
+对象URL，即blob URL。创建时可以通过window.URL.createObjectURL()方法，参数是File或Blob对象。谷歌中是.webkitURL.
+返回一个字符串，指向一块内存地址。
+要手动释放内存，就需要调用revokeObjectURL()方法，参数是上边获取到的URL。页面卸载时会自动释放。
+
+读取拖放的文件：
+drop事件的event.dataTransfer.files里可以读取到被放置的文件。可结合XMLHttpRequest实现拖拽上传。
+
+使用XHR上传文件
+作为xhr的send方法的参数来实现上传。直接传File对象是上传的文件内容，如果要上传文件一般还是结合FormData类型，将文件内容作为file键值对填充到FormData(append('file', file内容))
+
+17.5 Web计时
+window.performance对象
+
+17.6 Web Workers
+实现类似多线程的效果，后台进程效果，提升体验。
+var worker = new Worker(文件路径)//新建后开始下载文件
+worker.postMessage(任意值)//postMessage后才会执行文件中的代码
+通过message和error事件来通信，数据保存在event.data
+worker.terminate()停止一切相关工作和事件监听包括里边的代码执行
+
+Worker全局作用域
+里边的代码是另一个作用域，因而不能访问或操作DOM。且其全局作用域对象是worker本身，里边的功能也很有限。内部可以close方法停止执行。2
