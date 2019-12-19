@@ -1675,11 +1675,43 @@ drop事件的event.dataTransfer.files里可以读取到被放置的文件。可结合XMLHttpRequest
 window.performance对象
 
 17.6 Web Workers
-实现类似多线程的效果，后台进程效果，提升体验。
+实现类似多线程的效果，后台进程效果，提升体验。目前还未完全规范。
 var worker = new Worker(文件路径)//新建后开始下载文件
 worker.postMessage(任意值)//postMessage后才会执行文件中的代码
 通过message和error事件来通信，数据保存在event.data
 worker.terminate()停止一切相关工作和事件监听包括里边的代码执行
 
 Worker全局作用域
-里边的代码是另一个作用域，因而不能访问或操作DOM。且其全局作用域对象是worker本身，里边的功能也很有限。内部可以close方法停止执行。2
+里边的代码是另一个作用域，因而不能访问或操作DOM。且其全局作用域对象是worker本身，里边的功能也很有限。内部可以close方法停止执行。
+
+无法在worker中创建script元素，但是可以通过importScripts()方法，参数是若干个js文件url，且加载过程是异步的，因此所有脚本加载并执行之后，importScripts()才会执行。且加载脚本的执行顺序是按参数的顺序，且是worker的全局作用域中执行。
+
+
+18.其他
+ES5是ES3.1，ES6是ES Harmony：
+const， let块级作用域， 
+函数剩余参数...，默认参数=， 生成器yield， 
+数组迭代器next(), 数组领悟（var arr1=[xxx],arr2=[i for each (i in arr1)]）, 解构赋值（var [x,y]=[1,2]（对象也可））
+代理对象Proxy.create(handler, 原型对象（可选）)
+代理函数（类似）
+映射与集合，get,delete,set()
+WeakMap
+StructType
+ArrayType
+类class，私有成员getter，setter，继承extends，模块module（export公开），外部模块module/import form
+
+严格模式
+变量，对象，方法，eval()，arguments，this，with等
+
+JS库
+通用：YUI，Prototype，Dojo Toolkit，MooTools，JQuery，MockiKit，Underscore.js
+互联网应用：Backbone.js，Rico，qooxdoo
+动画和特效：script.aculo.us，moo.fx，Lightbox
+加密：JavaScript MD5，JavaScrypt
+
+JS工具
+校验器：JSLint，JSHint，JavaScript Lint
+压缩器：Dojo ShrinkSafe，YUI Compressor
+单元测试：JsUnit，YUI Test，DOH，qUnit
+文档生成器：JsDoc ToolKit，YUI Doc，AjaxDoc
+安全执行环境：ADsafe，Caja
