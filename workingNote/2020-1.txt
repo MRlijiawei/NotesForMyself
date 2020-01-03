@@ -1,3 +1,25 @@
 1.px2rem移动端适配插件
 
 2.css赛贝尔曲线
+cubic-bezier(x1,y1,x2,y2)，多用于动画
+
+3.backface-visibility，旋转到背面时是否可见。
+
+4.legend元素fieldset元素
+
+5.css伪类选择器:eq(n)、:odd（奇数）、:even（偶数）、:link（未访问链接）、:visited（已访问）、:lang、:hover、:active（鼠标点下去的时候）
+
+6.css选择器全总：
+id#, 
+class., 
+标签名, 
+相邻+, 
+后代 （空格）, 
+子元素>，
+多元素,（逗号）,
+属性（元素[条件: 属性 属性=value 属性^=value（^表示开头,$表示结尾） 属性$=value]）,
+伪类（见5）,
+伪元素::after,::before
+
+7.xx:nth-of-type(n)
+指定类型xx的标签的第n个，与nth-child类似，只有一种标签时两者效果相同。
