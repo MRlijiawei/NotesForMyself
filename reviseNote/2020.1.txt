@@ -1,0 +1,13 @@
+1.获取时间毫秒数
+var d = new Date()
+d.getTime()，Number(d)，+d
+
+2.获取页面全部元素并添加统一样式
+[].forEach.call($$("*"),function(a){
+  a.style.outline="1px solid #"+(~~(Math.random()*(1<<24))).toString(16)// 随机颜色
+})
+
+3.border和outerline的区别
+border几乎适用于所有元素；outerline主要适用于表单、链接、图片等；outerline不会占据空间，因而不会影响布局和元素位置。
+
+4.appendTo（jquery的方法，在指定元素的结尾插入指定元素，如果要插入元素是指定元素的子元素，则是移动元素，如滚动新闻列表的循环滚动和走马灯）
