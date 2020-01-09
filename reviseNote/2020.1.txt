@@ -30,5 +30,8 @@ super.functionOnParent([arguments]);
 服务器 -- cdn加速
 页面 -- 拆分，先加载页面等
 图片 -- base64，CSSsprite
-编码 -- 。。。
+编码 -- 。。。如循环判断尽量以判断次数最少为最优
 资源 -- 压缩
+
+10.Number(new Date())和+new Date()
+实测大部分时候是前者较快（百万次1ms的差别）
