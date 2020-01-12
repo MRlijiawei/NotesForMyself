@@ -23,3 +23,5 @@ class.,
 
 7.xx:nth-of-type(n)
 指定类型xx的标签的第n个，与nth-child类似，只有一种标签时两者效果相同。
+
+8.<slot></slot><!-- <template #name>如果插槽指定了name，那么就要对应的name的才能显示。template的name可以是动态的 -->
