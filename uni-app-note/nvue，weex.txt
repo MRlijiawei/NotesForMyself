@@ -1,0 +1,39 @@
+主要用于app端性能增强
+1.文字写在text中
+2.《list》的子组件只能以下或fix定位的组件
+	<cell>列表中的子列表项，于list的关系类似于html中的ul和li的关系。Weex会对cell进行高效的内存回收
+	<header>当header达到屏幕顶部时，吸附在顶部
+	<refresh>用于给列表添加下拉刷新功能
+	<loading>与refresh类似
+3.图片要指定宽高
+
+
+
+nvue中css注意事项
+1.单位只支持px，其他均不支持，包括百分比
+2.宽度高度：默认全屏宽高是750px X 1250px
+3.默认flex布局 diaplay:flex;flex-direction:column;flex-wrap:nowrap;
+4.不能合着写（margin，padding等）
+5.背景色只能用background-color（同上）
+6.选择器只支持单类(.xxx div等其他写法不支持)
+7.引入要用<style src="@/xxx"></style>（与style同级，即<style ...></style><style></style>）
+
+
+nvue和vue通讯
+1.nvue中使用uni.postMessage(data)
+2.在app.vue里使用onUniNViewMessage接收，接收到后可以使用uni.$emit通知其他，其他组件uni.$on接收，参数是标志。
+
+3.在vue里使用plus.webview.postMessageToUniNView(data,nvueid),id获取方式$getAppWebview()
+4.在nvue里引用globalEvent模块监听plusMessage事件
+
+
+nvue和vue共享数据
+nvue不支持vuex
+1.uni.storage 
+vue和nvue可以使用相同的uni.storage 存储，是持久化的，比如登陆状态可以保持在这里，uni.getStorageSync(xxx)获取
+2.globalData
+小程序里的机制，可以全端使用。在app.vue里定义globalData（与data同级），通过getApp().globalData获取
+
+
+监听pages.json里配置的搜索框和导航栏的事件：
+uni.onNavigationBarButtonTap()

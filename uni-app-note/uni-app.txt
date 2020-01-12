@@ -1,0 +1,28 @@
+1.全局公共样式
+2.动画库图标库
+3.底部导航栏
+4.基础UI库封装
+5.首页pages.json配置
+6.首页轮播图及组件封装
+7.分割线
+8.卡片组件
+9.列表组件
+10.价格组件
+11.顶部选项卡
+
+12.模拟数据
+
+13.nvue，weex
+
+nvue
+mainfest
+"nvueCompiler" : "weex",
+		"renderer":"native",
+        // "nvueCompiler" : "uni-app",
+14.轮播图
+15.其他组件
+16.监听页面显示
+
+vue
+17.搜索页面开发 ，pages.json配置
+18.随机颜色按钮开发
