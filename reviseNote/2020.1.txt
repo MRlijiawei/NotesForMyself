@@ -36,7 +36,9 @@ super.functionOnParent([arguments]);
 10.Number(new Date())和+new Date()
 实测大部分时候是前者较快（百万次1ms的差别）
 
-总结：
+11.flex布局，给中间元素增加margin-xxx:auto，相当于justify-content：space-between效果，可以把别的元素撑到flex的两端
+
+实用代码总结：
 1.获取时间的11位毫秒数值
 
 1.1 获取当前时间
