@@ -38,6 +38,23 @@ super.functionOnParent([arguments]);
 
 11.flex布局，给中间元素增加margin-xxx:auto，相当于justify-content：space-between效果，可以把别的元素撑到flex的两端
 
+12.气泡阴影
+box-shadow: 0 0 0 0.1em #0cf inset, 0 0 1em #0cf inset;
+    box-shadow: 0 0 0 0.1em #ff0 inset, 0 0 1em #ff0 inset;
+气泡伪元素
+    background-color: #fff;
+    border-radius: 50%;
+    content: "";
+    display: block;
+    opacity: 0.5;
+    position: absolute;
+    top: 0.75em;
+    left: 0.75em;
+    width: 1em;
+    height: 0.5em;
+    transform: rotate(-45deg);
+
+
 实用代码总结：
 1.获取时间的11位毫秒数值
 
