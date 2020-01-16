@@ -54,6 +54,12 @@ box-shadow: 0 0 0 0.1em #0cf inset, 0 0 1em #0cf inset;
     height: 0.5em;
     transform: rotate(-45deg);
 
+13.form的serializeArray
+serialize是返回=&拼接的字符串，serializeArray是返回每一项生成的包含name，value两个key的对象的数组
+合并转化为JSON：使用reduce合并
+form.serializeArray.reduce(function(obj,cur,index){obj[cur.name]=cur.value;return obj},{})
+
+14.atob和btoa方法，参数是字符串。字符串的base64编码和解码
 
 实用代码总结：
 1.获取时间的11位毫秒数值
