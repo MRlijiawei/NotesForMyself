@@ -1,0 +1,43 @@
+1.svnlook changed
+打印修改路径
+2.svnlook cat
+打印修改内容
+
+3.python strip 和 lstrip
+去除空格，去除左空格
+
+4.python 长度
+数组，字符串：len()
+其他，如map：1.len(list(g))——会发生数据转换，消耗内存
+2.sum(1 for _ in g)
+
+5.svn hook：pre-commit参数——path文件列表 depth messagefile cwd
+
+
+6.python [:2],[:2,:3]
+numpy的切片操作，结构num[a:b,c:d]，表示截取num的a~b-1行，c~d-1列（二维数组、字符串）,缺省开始表示0，缺省结尾表示末尾
+
+7.python popen（相当于双击文件）
+
+8.python读取文件和逐行读取文件
+open+read/readlines/readline
+with open('file.txt', 'r', encoding='utf-8') as f:
+    print(f.read())#一次性读取
+    for line in f:#逐行读取方式1——with
+f=open('file.txt', 'r', encoding='utf-8')#f是个对象，有name等属性
+for line in f.readlines():#逐行读取方式2——readlines
+f.close()
+全部读取和按行读取不能同时在一个open中使用，否则后读取的内容为空
+readline(size=-1)可以读取指定大小的内容,-1表示全部，默认
+
+9.python文件操作
+os.remove(path)#删除
+size=os.path.getsize(os.path.join(root,file))#文件大小
+sys.getfilesystemencoding()#文件编码
+f.write()#文件打开后写入，open时第二个参数要w写
+os.path.dirname(d)#目录
+
+10.python字符串包含——substr in str，字符串去除前后空格——strip，lstrip，rstrip，字符串替换——replace是全局替换的，相当于js的replace加上/g，find()/rfind()、index()/rindex()、和count()获取出现次数方法，str()——转化为字符串，title() 标题首字母大写、lower() 、upper() 、capitalize() 首字母大写、swapcase()大小写互换
+
+11.python正则
+re.compile,re.match,re.search,re.sub,findall,re.finditer,re.split
